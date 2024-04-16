@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:ToDoList.Views.Converters"  
+             x:Class="ToDoList.Views.Task.ViewTaskPage"
+             Title="{Binding Title}">
+    <ContentPage.Resources>
+        <converters:BoolToStringConverter x:Key="BoolConverter"/>
+    </ContentPage.Resources>
+    <StackLayout Spacing="20" Padding="15">
+        <Label Text="Text:" FontSize="Medium" />
+        <Label Text="{Binding Task.Title}" FontSize="Small"/>
+        <Label Text="Description:" FontSize="Medium" />
+        <Label Text="{Binding Task.Description}" FontSize="Small"/>        
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Termin: "
+                   FontSize="Small" />
+            <Label Text="{Binding Task.Term, StringFormat='{0:dd-MM-yyyy}'}"                                    
+                   FontSize="Small" />
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Ukończono: "
+                   FontSize="Small" />
+            <Label Text="{Binding Task.IsExecuted, Converter={StaticResource BoolConverter}, ConverterParameter='Tak|Nie'}"
+                   FontSize="Small" />
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Kategoria: "
+                   FontSize="Small" />
+            <Label Text="{Binding Task.CategoryName}"
+                   FontSize="Small" />
+        </StackLayout>
+    </StackLayout>
+    
+</ContentPage>

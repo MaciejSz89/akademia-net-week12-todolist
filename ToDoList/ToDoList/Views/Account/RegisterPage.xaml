@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="ToDoList.Views.Account.RegisterPage"
+             Shell.NavBarIsVisible="False">
+    <ContentPage.Content>
+        <StackLayout Padding="10,0,10,0" VerticalOptions="Center">
+            <Entry Placeholder="Email"
+                   Text="{Binding RegisterUser.Email}"/>
+            <Entry Placeholder="Hasło"
+                   IsPassword="True"
+                   Text="{Binding RegisterUser.Password}"/>
+            <Entry Placeholder="Powtórz hasło"
+                   IsPassword="True"
+                   Text="{Binding RegisterUser.ConfirmPassword}"/>
+            <Entry Placeholder="Imię"
+                   Text="{Binding RegisterUser.FirstName}"/>
+            <Entry Placeholder="Nazwisko"
+                   Text="{Binding RegisterUser.LastName}"/>
+            <Button VerticalOptions="Center" 
+                    Text="Zarejestruj się" 
+                    Command="{Binding RegisterCommand}"
+                    CommandParameter="{Binding RegisterUser}"
+                    CornerRadius="50"/>
+
+            <Label HorizontalOptions="Center">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Masz konto? " />
+                        <Span Text="Zaloguj się" 
+                              FontAttributes="Bold" 
+                              TextDecorations="Underline"/>
+                    </FormattedString>                    
+                </Label.FormattedText>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding LoginCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

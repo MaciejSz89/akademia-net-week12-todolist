@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="ToDoList.Views.Account.LoginPage"
+             Shell.NavBarIsVisible="False">
+    <ContentPage.Content>
+        <StackLayout Padding="10,0,10,0" VerticalOptions="Center">
+            <Entry Placeholder="Email"
+                   Text="{Binding Login.Email}"/>
+            <Entry Placeholder="Hasło"
+                   IsPassword="True"
+                   Text="{Binding Login.Password}"/>
+            <Button VerticalOptions="Center" 
+                    Text="Zaloguj" 
+                    Command="{Binding LoginCommand}"
+                    CommandParameter="{Binding Login}"
+                    CornerRadius="50"/>
+
+            <Label HorizontalOptions="Center">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Nie masz konta? " />
+                        <Span Text="Zarejestruj się" 
+                              FontAttributes="Bold" 
+                              TextDecorations="Underline"/>
+                    </FormattedString>                    
+                </Label.FormattedText>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding RegisterCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
