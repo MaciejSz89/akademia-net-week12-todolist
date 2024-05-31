@@ -12,6 +12,7 @@ namespace ToDoList.Services.Category
         System.Threading.Tasks.Task UpdateCategoryAsync(int id, WriteCategoryDto taskDto);
         System.Threading.Tasks.Task DeleteCategoryAsync(int id);
         Task<ReadCategoryDto> GetCategoryAsync(int id);
+        Task<IEnumerable<ReadCategoryDto>> GetCategoriesAsync();
         Task<ReadCategoriesPageDto> GetCategoriesAsync(GetCategoriesParamsDto param);
     }
 }

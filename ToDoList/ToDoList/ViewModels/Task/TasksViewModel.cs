@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace ToDoList.ViewModels.Task
 {
-    public class TasksViewModel : BaseViewModel, ITasksViewModel
+    public class TasksViewModel : ViewModelBase, ITasksViewModel
     {
         private ReadTaskWrapper _selectedCategory;
         private int _currentPage = 1;
@@ -159,7 +159,7 @@ namespace ToDoList.ViewModels.Task
 
         private async void OnAddTask(object obj)
         {
-            await Shell.Current.GoToAsync($"//{nameof(AddTaskPage)}");
+            await Shell.Current.GoToAsync($"/{nameof(AddTaskPage)}");
         }
 
         async void OnTaskSelected(ReadTaskWrapper task)

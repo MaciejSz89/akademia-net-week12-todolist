@@ -10,7 +10,7 @@ using Xamarin.Forms;
 namespace ToDoList.ViewModels.Task
 {
     [QueryProperty(nameof(Id), nameof(Id))]
-    public class EditTaskViewModel : BaseViewModel, IEditTaskViewModel
+    public class EditTaskViewModel : ViewModelBase, IEditTaskViewModel
     {
         private UpdateTaskWrapper _task;
         private int _id;

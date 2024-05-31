@@ -9,13 +9,17 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
+using ToDoList.DelegatingHandlers;
+using ToDoList.Services;
 using ToDoList.Services.Account;
 using ToDoList.Services.Category;
 using ToDoList.Services.Task;
 using ToDoList.ViewModels.Account;
 using ToDoList.ViewModels.Category;
 using ToDoList.ViewModels.Task;
+using Xamarin.Android.Net;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace ToDoList
 {
@@ -55,16 +59,12 @@ namespace ToDoList
 
             }
 
-
         }
 
 
         public static void ConfigureServices(HostBuilderContext ctx, IServiceCollection services)
         {
-            services.AddTransient<IAccountService, AccountService>()
-                    .AddTransient<ITaskService, TaskService>()
-                    .AddTransient<ICategoryService, CategoryService>()
-                    .AddTransient<ILoginViewModel, LoginViewModel>()
+            services.AddTransient<ILoginViewModel, LoginViewModel>()
                     .AddTransient<IRegisterViewModel, RegisterViewModel>()
                     .AddTransient<IAddTaskViewModel, AddTaskViewModel>()
                     .AddTransient<IEditTaskViewModel, EditTaskViewModel>()
@@ -74,30 +74,43 @@ namespace ToDoList
                     .AddTransient<IEditCategoryViewModel, EditCategoryViewModel>()
                     .AddTransient<ICategoriesViewModel, CategoriesViewModel>()
                     .AddTransient<IViewCategoryViewModel, ViewCategoryViewModel>()
+                    .AddTransient<ErrorsHandler>()
+                    .AddTransient<GetCachedAccessTokenHandler>()
+                    .AddTransient<IMessageDialog, MessageDialog>(provider=>new MessageDialog(Shell.Current)) 
                     .AddSingleton<App>();
-#if DEBUG
-            var httpClientHandler = new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
-            };
-            services.AddHttpClient("httpClient", client =>
-            {
-                client.BaseAddress = new Uri(App.BackendUrl);
-                var accessToken = Xamarin.Essentials.SecureStorage.GetAsync("AccessToken").Result;
 
-                if(!string.IsNullOrEmpty(accessToken))
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            })
-            .ConfigurePrimaryHttpMessageHandler(() => httpClientHandler);
-#else
-            services.AddHttpClient("httpClient", client =>
+            var httpClientBuilders = new List<IHttpClientBuilder>
             {
-                client.BaseAddress = new Uri(App.BackendUrl);
-            });
-#endif
+                services.AddHttpClient<IAccountService, AccountService>(ConfigureHttpClient),
+                services.AddHttpClient<ICategoryService, CategoryService>(ConfigureHttpClient)                        
+                        .AddHttpMessageHandler<GetCachedAccessTokenHandler>()
+                        .AddHttpMessageHandler<ErrorsHandler>(),
+                services.AddHttpClient<ITaskService, TaskService>(ConfigureHttpClient)                        
+                        .AddHttpMessageHandler<GetCachedAccessTokenHandler>()
+                        .AddHttpMessageHandler<ErrorsHandler>(),
+            };
+
+
+            foreach (var httpClientBuilder in httpClientBuilders)
+            {
+                httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() =>
+                    {
+                        // Get platform dependent HttpMessageHandler
+                        var handler = Xamarin.Forms.DependencyService.Get<ICustomHttpMessageHandler>().GetHttpMessageHandler();
+                       
+                        return handler;
+                    });
+
+            }
 
         }
 
+
+        private static void ConfigureHttpClient(IServiceProvider serviceProvider, HttpClient httpClient)
+        {
+            httpClient.BaseAddress = new Uri(App.BackendUrl);
+            httpClient.Timeout = TimeSpan.FromSeconds(5);
+        }
 
     }
 }

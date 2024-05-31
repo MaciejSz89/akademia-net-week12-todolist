@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MvvmHelpers.Commands;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
@@ -7,10 +8,11 @@ using ToDoList.Models.Converters;
 using ToDoList.Models.Wrappers.Category;
 using ToDoList.Services.Category;
 using Xamarin.Forms;
+using Command = MvvmHelpers.Commands.Command;
 
 namespace ToDoList.ViewModels.Category
 {
-    public class AddCategoryViewModel : BaseViewModel, IAddCategoryViewModel
+    public class AddCategoryViewModel : ViewModelBase, IAddCategoryViewModel
     {
         private WriteCategoryWrapper _category;
         private readonly ICategoryService _categoryService;
@@ -18,14 +20,14 @@ namespace ToDoList.ViewModels.Category
         public AddCategoryViewModel(ICategoryService categoryService)
         {
             Category = new WriteCategoryWrapper();
-            SaveCommand = new Command(OnSave, ValidateSave);
+            SaveCommand = new AsyncCommand(OnSave, ValidateSave);
             CancelCommand = new Command(OnCancel);
             PropertyChanged +=
-                (_, __) => SaveCommand.ChangeCanExecute();
+                (_, __) => (SaveCommand as AsyncCommand).RaiseCanExecuteChanged();
             _categoryService = categoryService;
         }
 
-        private bool ValidateSave()
+        private bool ValidateSave(object obj)
         {
             //TODO: Add validation
             return true;
@@ -42,15 +44,15 @@ namespace ToDoList.ViewModels.Category
 
 
 
-        public Command SaveCommand { get; }
-        public Command CancelCommand { get; }
+        public ICommand SaveCommand { get; }
+        public ICommand CancelCommand { get; }
 
         private async void OnCancel()
         {
-            await Shell.Current.GoToAsync("..");
+            await Xamarin.Forms.Shell.Current.GoToAsync("..");
         }
 
-        private async void OnSave()
+        private async System.Threading.Tasks.Task OnSave()
         {
 
 

@@ -1,22 +1,23 @@
-﻿using System.Collections.ObjectModel;
+﻿using MvvmHelpers;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 using ToDoList.Models.Wrappers.Category;
-using Xamarin.Forms;
 
 namespace ToDoList.ViewModels.Category
 {
     public interface ICategoriesViewModel : IViewModel
     {
-        Command AddCategoryCommand { get; }
         int CurrentPage { get; set; }
-        Command DeleteCategoryCommand { get; }
         GetCategoriesParamsWrapper GetCategoriesParamsWrapper { get; set; }
         int LastPage { get; set; }
-        Command LoadCategoriesCommand { get; }
-        Command NextPageCommand { get; }
-        Command PreviousPageCommand { get; }
+        ICommand AddCategoryCommand { get; }
+        ICommand LoadCategoriesCommand { get; }
+        ICommand DeleteCategoryCommand { get; }
+        ICommand NextPageCommand { get; }
+        ICommand PreviousPageCommand { get; }
+        ICommand CategoryTapped { get; }
         ReadCategoryWrapper SelectedCategory { get; set; }
-        ObservableCollection<ReadCategoryWrapper> Categories { get; }
-        Command<ReadCategoryWrapper> CategoryTapped { get; }
+        ObservableRangeCollection<ReadCategoryWrapper> Categories { get; }
 
         void OnAppearing();
     }

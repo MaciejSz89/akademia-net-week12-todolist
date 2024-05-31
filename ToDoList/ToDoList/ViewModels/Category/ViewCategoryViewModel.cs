@@ -1,17 +1,18 @@
-﻿using System;
+﻿using MvvmHelpers.Commands;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using ToDoList.Models;
 using ToDoList.Models.Converters;
 using ToDoList.Models.Wrappers.Category;
 using ToDoList.Services.Category;
 using ToDoList.Views.Category;
-using Xamarin.Forms;
 
 namespace ToDoList.ViewModels.Category
 {
-    [QueryProperty(nameof(Id), nameof(Id))]
-    public class ViewCategoryViewModel : BaseViewModel, IViewCategoryViewModel
+    [Xamarin.Forms.QueryProperty(nameof(Id), nameof(Id))]
+    public class ViewCategoryViewModel : ViewModelBase, IViewCategoryViewModel
     {
 
 
@@ -21,14 +22,14 @@ namespace ToDoList.ViewModels.Category
 
         public ViewCategoryViewModel(ICategoryService categoryService)
         {
-            EditCommand = new Command(OnEdit);
+            EditCommand = new AsyncCommand(OnEdit);
             _categoryService = categoryService;
         }
 
-        private async void OnEdit(object obj)
+        private async System.Threading.Tasks.Task OnEdit()
         {
-            var route = $"//{nameof(EditCategoryPage)}?{nameof(EditCategoryViewModel.Id)}={Id}";
-            await Shell.Current.GoToAsync($"//{nameof(EditCategoryPage)}?{nameof(EditCategoryViewModel.Id)}={Id}");
+            var route = $"/{nameof(EditCategoryPage)}?{nameof(EditCategoryViewModel.Id)}={Id}";
+            await Xamarin.Forms.Shell.Current.GoToAsync(route);
         }
 
         public int Id
@@ -53,7 +54,7 @@ namespace ToDoList.ViewModels.Category
             }
         }
 
-        public Command EditCommand
+        public ICommand EditCommand
         {
             get;
         }

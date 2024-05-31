@@ -14,18 +14,17 @@ namespace ToDoList.Services.Account
 {
     public class AccountService : IAccountService
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly HttpClient _httpClient;
 
-        public AccountService(IHttpClientFactory httpClientFactory)
+        public AccountService(HttpClient httpClient)
         {
-            _httpClientFactory = httpClientFactory;
+            _httpClient = httpClient;
         }
         public async Task<bool> LoginAsync(LoginDto dto)
         {
             
             var stringContent = new StringContent(JsonConvert.SerializeObject(dto), Encoding.UTF8, "application/json");
-            var httpClient = _httpClientFactory.CreateClient("httpClient");
-            using (var response = await httpClient.PostAsync("Account/Login", stringContent))
+            using (var response = await _httpClient.PostAsync("Account/Login", stringContent))
             {
                 if(!(response.StatusCode == HttpStatusCode.OK))
                     return false;
@@ -34,7 +33,7 @@ namespace ToDoList.Services.Account
 
                 await Xamarin.Essentials.SecureStorage.SetAsync("AccessToken", accessToken);
 
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 return true;
             }
         }
@@ -42,9 +41,8 @@ namespace ToDoList.Services.Account
         public async Task<bool> RegisterAsync(RegisterUserDto dto)
         {
             var stringContent = new StringContent(JsonConvert.SerializeObject(dto), Encoding.UTF8, "application/json");
-            var httpClient = _httpClientFactory.CreateClient("httpClient");
 
-            using (var response = await httpClient.PostAsync("Account/Register", stringContent))
+            using (var response = await _httpClient.PostAsync("Account/Register", stringContent))
             {
                 var isSuccess = response.IsSuccessStatusCode;
 

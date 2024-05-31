@@ -13,7 +13,7 @@ using Xamarin.Forms;
 
 namespace ToDoList.ViewModels.Account
 {
-    public class LoginViewModel : BaseViewModel, ILoginViewModel
+    public class LoginViewModel : ViewModelBase, ILoginViewModel
     {
         private readonly IAccountService _accountService;
         private LoginWrapper _login;

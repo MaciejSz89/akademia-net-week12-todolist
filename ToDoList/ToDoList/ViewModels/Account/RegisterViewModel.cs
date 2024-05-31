@@ -12,7 +12,7 @@ using Xamarin.Forms;
 
 namespace ToDoList.ViewModels.Account
 {
-    public class RegisterViewModel : BaseViewModel, IRegisterViewModel
+    public class RegisterViewModel : ViewModelBase, IRegisterViewModel
     {
         private readonly IAccountService _accountService;
         private RegisterWrapper _register;

@@ -84,10 +84,20 @@
     <FlyoutItem Title="About" Icon="icon_about.png">
         <ShellContent Route="AboutPage" ContentTemplate="{DataTemplate local:AboutPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="Zadania" Icon="icon_feed.png">
+    <FlyoutItem Title="Zadania">
+        <FlyoutItem.Icon>
+            <FontImageSource Glyph="{StaticResource font-awesome-tasks}" 
+                             FontFamily="fontello" 
+                             Color="Black" />
+        </FlyoutItem.Icon>
         <ShellContent Route="TasksPage" ContentTemplate="{DataTemplate task:TasksPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="Kategorie" Icon="icon_feed.png">
+    <FlyoutItem Title="Kategorie">
+        <FlyoutItem.Icon>
+            <FontImageSource Glyph="{StaticResource font-awesome-tag}" 
+                             FontFamily="fontello" 
+                             Color="Black"/>
+        </FlyoutItem.Icon>
         <ShellContent Route="CategoriesPage" ContentTemplate="{DataTemplate category:CategoriesPage}" />
     </FlyoutItem>
 
@@ -105,11 +115,6 @@
     <TabBar>
         <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate account:LoginPage}" />
         <ShellContent Route="RegisterPage" ContentTemplate="{DataTemplate account:RegisterPage}" />
-        <ShellContent Route="AddTaskPage" ContentTemplate="{DataTemplate task:AddTaskPage}" />
-        <ShellContent Route="ViewTaskPage" ContentTemplate="{DataTemplate task:ViewTaskPage}" />
-        <ShellContent Route="EditTaskPage" ContentTemplate="{DataTemplate task:EditTaskPage}" />
-        <ShellContent Route="ViewCategoryPage" ContentTemplate="{DataTemplate category:ViewCategoryPage}" />
-        <ShellContent Route="EditCategoryPage" ContentTemplate="{DataTemplate category:EditCategoryPage}" />
     </TabBar>
 
     <!-- Optional Templates 

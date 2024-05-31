@@ -9,7 +9,8 @@
         <ResourceDictionary>
             <Color x:Key="Primary">#2196F3</Color>
             <Style TargetType="Button">
-                <Setter Property="TextColor" Value="White"></Setter>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="CornerRadius" Value="50"/>
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
@@ -27,6 +28,14 @@
                     </VisualStateGroupList>
                 </Setter>
             </Style>
+            <x:String x:Key="font-awesome-share">&#xF1E0;</x:String>
+            <x:String x:Key="font-awesome-tag">&#xE803;</x:String>
+            <x:String x:Key="font-awesome-pencil">&#xE801;</x:String>
+            <x:String x:Key="font-awesome-trash-empty">&#xE800;</x:String>
+            <x:String x:Key="font-awesome-plus-squared-alt">&#xF196;</x:String>
+            <x:String x:Key="font-awesome-check">&#xE802;</x:String>
+            <x:String x:Key="font-awesome-check-empty">&#xF096;</x:String>
+            <x:String x:Key="font-awesome-tasks">&#xF0AE;</x:String>
         </ResourceDictionary>        
     </Application.Resources>
 </Application>

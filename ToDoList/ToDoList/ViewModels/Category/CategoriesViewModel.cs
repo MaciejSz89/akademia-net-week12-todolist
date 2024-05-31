@@ -1,50 +1,55 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using Xamarin.Forms;
 using ToDoList.Models.Wrappers.Category;
 using ToDoList.Services.Category;
 using ToDoList.Models.Converters;
 using System.Linq;
 using ToDoList.Views.Category;
+using MvvmHelpers.Commands;
+using Xamarin.Forms;
+using Command = MvvmHelpers.Commands.Command;
+using System.Windows.Input;
+using MvvmHelpers;
 
 namespace ToDoList.ViewModels.Category
 {
-    public class CategoriesViewModel : BaseViewModel, ICategoriesViewModel
+    public class CategoriesViewModel : ViewModelBase, ICategoriesViewModel
     {
         private ReadCategoryWrapper _selectedCategory;
         private int _currentPage = 1;
         private int _lastPage = 1;
         private GetCategoriesParamsWrapper _getCategoriesParamsWrapper;
         private readonly ICategoryService _categoryService;
+        
 
         public CategoriesViewModel(ICategoryService categoryService)
         {
             Title = "Kategorie";
-            Categories = new ObservableCollection<ReadCategoryWrapper>();
-            LoadCategoriesCommand = new Command(async () => await ExecuteLoadCategoriesCommand());
+            Categories = new ObservableRangeCollection<ReadCategoryWrapper>();
+            LoadCategoriesCommand = new AsyncCommand(() => ExecuteLoadCategoriesCommand());
             GetCategoriesParamsWrapper = new GetCategoriesParamsWrapper();
 
-            CategoryTapped = new Command<ReadCategoryWrapper>(OnCategorySelected);
+            CategoryTapped = new MvvmHelpers.Commands.Command<ReadCategoryWrapper>(OnCategorySelected);
 
             AddCategoryCommand = new Command(OnAddCategory);
-            EditCategoryCommand = new Command<ReadCategoryWrapper>(async (x) => await OnEditCategory(x));
-            DeleteCategoryCommand = new Command<ReadCategoryWrapper>(async (x) => await OnDeleteCategory(x));
+            EditCategoryCommand = new MvvmHelpers.Commands.Command<ReadCategoryWrapper>(async (x) => await OnEditCategory(x));
+            DeleteCategoryCommand = new MvvmHelpers.Commands.Command<ReadCategoryWrapper>(async (x) => await OnDeleteCategory(x));
             PreviousPageCommand = new Command(async (x) => await ExecutePreviousPageCommand(), ValidatePreviousPage);
             NextPageCommand = new Command(async (x) => await ExecuteNextPageCommand(), ValidateNextPage);
             _categoryService = categoryService;
         }
 
 
-        public ObservableCollection<ReadCategoryWrapper> Categories { get; }
-        public Command LoadCategoriesCommand { get; }
+        public ObservableRangeCollection<ReadCategoryWrapper> Categories { get; }
+        public ICommand LoadCategoriesCommand { get; }
 
-        public Command AddCategoryCommand { get; }
-        public Command EditCategoryCommand { get; }
-        public Command DeleteCategoryCommand { get; }
-        public Command PreviousPageCommand { get; }
-        public Command NextPageCommand { get; }
-        public Command<ReadCategoryWrapper> CategoryTapped { get; }
+        public ICommand AddCategoryCommand { get; }
+        public ICommand EditCategoryCommand { get; }
+        public ICommand DeleteCategoryCommand { get; }
+        public ICommand PreviousPageCommand { get; }
+        public ICommand NextPageCommand { get; }
+        public ICommand CategoryTapped { get; }
         public int CurrentPage
         {
             get => _currentPage;
@@ -52,8 +57,8 @@ namespace ToDoList.ViewModels.Category
             {
                 SetProperty(ref _currentPage, value);
                 GetCategoriesParamsWrapper.PageNumber = value;
-                PreviousPageCommand.ChangeCanExecute();
-                NextPageCommand.ChangeCanExecute();
+                (PreviousPageCommand as Command).RaiseCanExecuteChanged();
+                (NextPageCommand as Command).RaiseCanExecuteChanged();
             }
         }
         public int LastPage
@@ -62,7 +67,7 @@ namespace ToDoList.ViewModels.Category
             set
             {
                 SetProperty(ref _lastPage, value);
-                NextPageCommand.ChangeCanExecute();
+                (NextPageCommand as Command).RaiseCanExecuteChanged();
             }
         }
         public GetCategoriesParamsWrapper GetCategoriesParamsWrapper
@@ -99,11 +104,15 @@ namespace ToDoList.ViewModels.Category
         }
         private async System.Threading.Tasks.Task OnEditCategory(ReadCategoryWrapper categoryWrapper)
         {
+            if (categoryWrapper == null)
+                return;
 
-            await Shell.Current.GoToAsync($"//{nameof(EditCategoryPage)}?Id={categoryWrapper.Id}");
+            var route = $"/{nameof(EditCategoryPage)}?{nameof(ReadCategoryWrapper.Id)}={categoryWrapper.Id}";
+            await Shell.Current.GoToAsync(route);
         }
         private async System.Threading.Tasks.Task OnDeleteCategory(ReadCategoryWrapper categoryWrapper)
         {
+            IsBusy = true;
             if (categoryWrapper == null)
                 return;
 
@@ -114,7 +123,10 @@ namespace ToDoList.ViewModels.Category
 
             await _categoryService.DeleteCategoryAsync(categoryWrapper.Id);
 
-            await ExecuteLoadCategoriesCommand();
+
+            await LoadCategories();
+            IsBusy = false;
+
         }
 
         private async System.Threading.Tasks.Task ExecuteLoadCategoriesCommand()
@@ -123,14 +135,7 @@ namespace ToDoList.ViewModels.Category
 
             try
             {
-                Categories.Clear();
-                var categoriesPage = await _categoryService.GetCategoriesAsync(GetCategoriesParamsWrapper.ToDto());
-                var categories = categoriesPage.Categories.Select(x => x.ToWrapper());
-
-                foreach (var category in categories)
-                {
-                    Categories.Add(category);
-                }
+                await LoadCategories();
             }
             catch (Exception ex)
             {
@@ -141,6 +146,17 @@ namespace ToDoList.ViewModels.Category
                 IsBusy = false;
             }
         }
+
+        private async System.Threading.Tasks.Task LoadCategories()
+        {
+
+            var categoriesPage = await _categoryService.GetCategoriesAsync(GetCategoriesParamsWrapper.ToDto());
+            var categories = categoriesPage.Categories.Select(x => x.ToWrapper()).ToList();
+
+            Categories.ReplaceRange(categories);
+        }
+
+
 
         public void OnAppearing()
         {
@@ -167,7 +183,7 @@ namespace ToDoList.ViewModels.Category
         {
             if (category == null)
                 return;
-            var route = $"{nameof(ViewCategoryPage)}?{nameof(ViewCategoryViewModel.Id)}={category.Id}";
+            var route = $"/{nameof(ViewCategoryPage)}?{nameof(ViewCategoryViewModel.Id)}={category.Id}";
             await Shell.Current.GoToAsync(route);
         }
     }

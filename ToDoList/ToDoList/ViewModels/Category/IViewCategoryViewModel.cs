@@ -1,12 +1,12 @@
-﻿using ToDoList.Models.Wrappers.Category;
-using Xamarin.Forms;
+﻿using System.Windows.Input;
+using ToDoList.Models.Wrappers.Category;
 
 namespace ToDoList.ViewModels.Category
 {
     public interface IViewCategoryViewModel : IViewModel
     {
         int Id { get; set; }
-        Command EditCommand { get; }
+        ICommand EditCommand { get; }
         ReadCategoryWrapper Category { get; set; }
 
         void LoadCategory(int id);

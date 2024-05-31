@@ -1,12 +1,12 @@
-﻿using ToDoList.Models.Wrappers.Category;
-using Xamarin.Forms;
+﻿using System.Windows.Input;
+using ToDoList.Models.Wrappers.Category;
 
 namespace ToDoList.ViewModels.Category
 {
     public interface IAddCategoryViewModel : IViewModel
     {
-        Command CancelCommand { get; }
-        Command SaveCommand { get; }
+        ICommand CancelCommand { get; }
+        ICommand SaveCommand { get; }
         WriteCategoryWrapper Category { get; set; }
     }
 }

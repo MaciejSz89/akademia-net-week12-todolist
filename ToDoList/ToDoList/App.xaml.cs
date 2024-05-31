@@ -12,15 +12,17 @@ namespace ToDoList
 {
     public partial class App : Application
     {
-        public static string BackendUrl = "https://10.0.2.2:7021/api/";
+        public static string BackendUrl = "http://10.0.2.2:5207/api/";
 
         public App()
         {
             InitializeComponent();
 
+            MainPage = new AppShell();
+
             Startup.Init();
 
-            MainPage = new AppShell();
+
             Shell.Current.GoToAsync("//LoginPage");
 
 

@@ -10,7 +10,7 @@ using Xamarin.Forms;
 namespace ToDoList.ViewModels.Task
 {
     [QueryProperty(nameof(Id), nameof(Id))]
-    public class ViewTaskViewModel : BaseViewModel, IViewTaskViewModel
+    public class ViewTaskViewModel : ViewModelBase, IViewTaskViewModel
     {
 
 
