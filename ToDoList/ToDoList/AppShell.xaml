@@ -5,6 +5,7 @@
        xmlns:task="clr-namespace:ToDoList.Views.Task"
        xmlns:category="clr-namespace:ToDoList.Views.Category"
        xmlns:account="clr-namespace:ToDoList.Views.Account"
+       xmlns:controls="clr-namespace:ToDoList.Controls"
        Title="ToDoList"
        x:Class="ToDoList.AppShell">
 
@@ -13,6 +14,31 @@
     
         https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/
     -->
+
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid StyleClass="FlyoutItemLayoutStyle">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.2*" />
+                    <ColumnDefinition Width="0.8*" />
+                </Grid.ColumnDefinitions>
+                <Label StyleClass="FlyoutItemLabelStyle"
+                       x:Name="FlyoutItemIcon"
+                       FontFamily="fontello"       
+                       Text="{Binding IconGlyph}"
+                       TextColor="{Binding Source={x:Reference FlyoutItemLabel}, Path=TextColor}"
+                       FontSize="30"
+                       Margin="20"
+                       VerticalTextAlignment="Center"/>
+                <Label StyleClass="FlyoutItemLabelStyle"
+                       x:Name="FlyoutItemLabel"
+                       Grid.Column="1"        
+                       Text="{Binding Title}"
+                       VerticalTextAlignment="Center"
+                       Margin="5"/>
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
 
     <Shell.Resources>
         <ResourceDictionary>
@@ -29,6 +55,7 @@
             </Style>
             <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
             <Style TargetType="FlyoutItem" BasedOn="{StaticResource BaseStyle}" />
+            <Style TargetType="controls:FlyoutItemIconFont" BasedOn="{StaticResource BaseStyle}"/>
 
             <!--
             Default Styles for all Flyout Items
@@ -36,8 +63,9 @@
             -->
             <Style Class="FlyoutItemLabelStyle" TargetType="Label">
                 <Setter Property="TextColor" Value="White"></Setter>
+                <Setter Property="FontSize" Value="Medium"></Setter>
             </Style>
-            <Style Class="FlyoutItemLayoutStyle" TargetType="Layout" ApplyToDerivedTypes="True">
+            <Style Class="FlyoutItemLayoutStyle" TargetType="Grid" ApplyToDerivedTypes="True">
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
@@ -81,25 +109,20 @@
         FlyoutDisplayOptions="AsMultipleItems" will create a separate flyout item for each child element    
         https://docs.microsoft.com/dotnet/api/xamarin.forms.shellgroupitem.flyoutdisplayoptions?view=xamarin-forms
     -->
-    <FlyoutItem Title="About" Icon="icon_about.png">
+
+    <controls:FlyoutItemIconFont Title="O nas" IconGlyph="{StaticResource font-awesome-info-circled}">
         <ShellContent Route="AboutPage" ContentTemplate="{DataTemplate local:AboutPage}" />
-    </FlyoutItem>
-    <FlyoutItem Title="Zadania">
-        <FlyoutItem.Icon>
-            <FontImageSource Glyph="{StaticResource font-awesome-tasks}" 
-                             FontFamily="fontello" 
-                             Color="Black" />
-        </FlyoutItem.Icon>
+    </controls:FlyoutItemIconFont>
+
+
+    <controls:FlyoutItemIconFont Title="Zadania" IconGlyph="{StaticResource font-awesome-tasks}">
         <ShellContent Route="TasksPage" ContentTemplate="{DataTemplate task:TasksPage}" />
-    </FlyoutItem>
-    <FlyoutItem Title="Kategorie">
-        <FlyoutItem.Icon>
-            <FontImageSource Glyph="{StaticResource font-awesome-tag}" 
-                             FontFamily="fontello" 
-                             Color="Black"/>
-        </FlyoutItem.Icon>
+    </controls:FlyoutItemIconFont>
+
+    <controls:FlyoutItemIconFont Title="Kategorie" IconGlyph="{StaticResource font-awesome-tag}">
         <ShellContent Route="CategoriesPage" ContentTemplate="{DataTemplate category:CategoriesPage}" />
-    </FlyoutItem>
+    </controls:FlyoutItemIconFont>
+
 
     <!-- When the Flyout is visible this will be a menu item you can tie a click behavior to  -->
     <MenuItem Text="Logout" StyleClass="MenuItemLayoutStyle" Clicked="OnMenuItemClicked">
