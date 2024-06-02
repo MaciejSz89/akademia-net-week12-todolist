@@ -159,7 +159,7 @@ namespace ToDoList.ViewModels.Task
 
         private async void OnAddTask(object obj)
         {
-            await Shell.Current.GoToAsync($"/{nameof(AddTaskPage)}");
+            await Shell.Current.GoToAsync($"{nameof(AddTaskPage)}");
         }
 
         async void OnTaskSelected(ReadTaskWrapper task)

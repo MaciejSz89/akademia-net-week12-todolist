@@ -54,6 +54,7 @@ namespace ToDoList.Services.Category
             var response = await _httpClient.GetAsync("Category");
 
             var json = await response.Content.ReadAsStringAsync();
+
             var categories = JsonConvert.DeserializeObject<IEnumerable<ReadCategoryDto>>(json);
             return categories;
         }

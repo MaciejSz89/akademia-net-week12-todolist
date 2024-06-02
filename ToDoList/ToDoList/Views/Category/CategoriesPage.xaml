@@ -4,8 +4,8 @@
              x:Class="ToDoList.Views.Category.CategoriesPage"
              Title="{Binding Title}"
              xmlns:local="clr-namespace:ToDoList.ViewModels.Category"  
-             xmlns:task="clr-namespace:ToDoList.Models.Wrappers.Category"  
-             xmlns:converters="clr-namespace:ToDoList.Views.Converters"  
+             xmlns:category="clr-namespace:ToDoList.Models.Wrappers.Category"  
+             xmlns:converters="clr-namespace:ToDoList.Helpers.Converters"  
              x:Name="BrowseItemsPage">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -34,7 +34,6 @@
                 SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-
                     <SwipeView>
                         <SwipeView.LeftItems>
                             <SwipeItems>
@@ -91,7 +90,7 @@
                             </SwipeItems>
                         </SwipeView.RightItems>
                         <Grid Padding="10" 
-                              x:DataType="task:ReadCategoryWrapper">
+                              x:DataType="category:ReadCategoryWrapper">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="Auto"/>
@@ -100,19 +99,7 @@
                                    LineBreakMode="NoWrap" 
                                    Style="{DynamicResource ListItemTextStyle}" 
                                    FontSize="20" 
-                                   TextColor="Black"/>
-                            <!--<Button Grid.Column="1"
-                                WidthRequest="70"
-                                HeightRequest="35"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center"
-                                Text="Usuń"
-                                FontSize="10"
-                                BackgroundColor="OrangeRed"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:ICategoriesViewModel}}, Path=DeleteCategoryCommand}"
-                                                  CommandParameter="{Binding .}"
-                            />-->
-
+                                   TextColor="{StaticResource Primary}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer 
                                 NumberOfTapsRequired="1"

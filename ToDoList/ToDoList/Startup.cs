@@ -109,7 +109,7 @@ namespace ToDoList
         private static void ConfigureHttpClient(IServiceProvider serviceProvider, HttpClient httpClient)
         {
             httpClient.BaseAddress = new Uri(App.BackendUrl);
-            httpClient.Timeout = TimeSpan.FromSeconds(5);
+            httpClient.Timeout = TimeSpan.FromSeconds(120);
         }
 
     }

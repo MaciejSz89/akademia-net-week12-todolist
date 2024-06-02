@@ -16,6 +16,7 @@ namespace ToDoList.ViewModels.Task
     public class AddTaskViewModel : ViewModelBase, IAddTaskViewModel
     {
         private CreateTaskWrapper _task;
+        private ReadCategoryWrapper _selectedCategory;
         private readonly ITaskService _taskService;
         private readonly ICategoryService _categoryService;
 
@@ -28,8 +29,13 @@ namespace ToDoList.ViewModels.Task
                 (_, __) => SaveCommand.ChangeCanExecute();
             _taskService = taskService;
             _categoryService = categoryService;
-            var categoryDtos = _categoryService.GetCategoriesAsync().Result;
             Categories = new ObservableCollection<ReadCategoryWrapper>();
+            Initialize();
+        }
+
+        private async void Initialize()
+        {
+            var categoryDtos = await _categoryService.GetCategoriesAsync();
             foreach (var dto in categoryDtos)
             {
                 Categories.Add(dto.ToWrapper());
@@ -58,6 +64,7 @@ namespace ToDoList.ViewModels.Task
         public Command SaveCommand { get; }
         public Command CancelCommand { get; }
 
+
         private async void OnCancel()
         {
             await Shell.Current.GoToAsync("..");
@@ -65,11 +72,21 @@ namespace ToDoList.ViewModels.Task
 
         private async void OnSave()
         {
-
+            
 
             await _taskService.AddTaskAsync(Task.ToDto());
 
             await Shell.Current.GoToAsync("..");
         }
+        public ReadCategoryWrapper SelectedCategory
+        {
+            get => _selectedCategory;
+            set
+            {
+                SetProperty(ref _selectedCategory, value);
+                Task.CategoryId = _selectedCategory.Id;
+            }
+        }
+
     }
 }

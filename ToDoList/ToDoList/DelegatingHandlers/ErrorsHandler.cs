@@ -39,12 +39,12 @@ namespace ToDoList.DelegatingHandlers
 
 
             }
-            catch (HttpRequestException)
+            catch (HttpRequestException e)
             {
                 await ShowError("Błąd żądania");
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 await ShowError("Błąd");
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);

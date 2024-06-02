@@ -5,13 +5,18 @@
              Title="{Binding Title}"
              xmlns:local="clr-namespace:ToDoList.ViewModels.Task"  
              xmlns:task="clr-namespace:ToDoList.Models.Wrappers.Task"  
-             xmlns:converters="clr-namespace:ToDoList.Views.Converters"  
+             xmlns:converters="clr-namespace:ToDoList.Helpers.Converters"  
              x:Name="BrowseItemsPage">
     <ContentPage.Resources>
         <converters:BoolToStringConverter x:Key="BoolConverter"/>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Dodaj zadanie" Command="{Binding AddTaskCommand}" />
+        <ToolbarItem Command="{Binding AddTaskCommand}" >
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="fontello"
+                     Glyph="{StaticResource font-awesome-plus-squared-alt}"/>
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
     </ContentPage.ToolbarItems>
     <!--
       x:DataType enables compiled bindings for better performance and compile time validation of binding expressions.
@@ -25,34 +30,101 @@
                 SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <StackLayout Padding="10" x:DataType="task:ReadTaskWrapper">
-                        <Label Text="{Binding Title}" 
-                               LineBreakMode="NoWrap" 
-                               Style="{DynamicResource ListItemTextStyle}" 
-                               FontSize="16" />
-                        <Label Text="{Binding Description}" 
-                               LineBreakMode="NoWrap"
-                               Style="{DynamicResource ListItemDetailTextStyle}"
-                               FontSize="13" />
-                        <StackLayout Orientation="Horizontal">
-                            <Label Text="Ukończono: " 
-                                   LineBreakMode="NoWrap"
-                                   Style="{DynamicResource ListItemDetailTextStyle}"
-                                   FontSize="3" />
-                            <Label Text="{Binding IsExecuted, Converter={StaticResource BoolConverter}, ConverterParameter='Tak|Nie'}"
-                                   LineBreakMode="NoWrap"
-                                   Style="{DynamicResource ListItemDetailTextStyle}"
-                                   FontSize="3" />
-                        </StackLayout>
+                    <SwipeView>
+                        <SwipeView.LeftItems>
+                            <SwipeItems>
+                                <SwipeItemView  Command="{Binding Source={RelativeSource AncestorType={x:Type local:ITasksViewModel}}, Path=EditTaskCommand}"
+                                                CommandParameter="{Binding BindingContext, Source={RelativeSource AncestorType={x:Type SwipeView}}}">
+                                    <Grid BackgroundColor="Orange"
+                                          Padding="30,0,30,0">
+                                        <Label Text="{StaticResource font-awesome-pencil}"
+                                               FontFamily="fontello"
+                                               FontSize="20"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+                                </SwipeItemView>
+                                <SwipeItemView Command="{Binding Source={RelativeSource AncestorType={x:Type local:ITasksViewModel}}, Path=DeleteTaskCommand}"
+                                               CommandParameter="{Binding BindingContext, Source={RelativeSource AncestorType={x:Type SwipeView}}}">
+                                    <Grid BackgroundColor="Red"
+                                          Padding="30,0,30,0">
+                                        <Label Text="{StaticResource font-awesome-trash-empty}"
+                                               FontFamily="fontello"
+                                               FontSize="20"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+                                </SwipeItemView>
+                            </SwipeItems>
 
-                        <StackLayout.GestureRecognizers>
-                            <TapGestureRecognizer 
-                                NumberOfTapsRequired="1"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:ITasksViewModel}}, Path=TaskTapped}"		
-                                CommandParameter="{Binding .}">
-                            </TapGestureRecognizer>
-                        </StackLayout.GestureRecognizers>
-                    </StackLayout>
+                        </SwipeView.LeftItems>
+
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItemView Command="{Binding Source={RelativeSource AncestorType={x:Type local:ITasksViewModel}}, Path=DeleteTaskCommand}"
+                                               CommandParameter="{Binding BindingContext, Source={RelativeSource AncestorType={x:Type SwipeView}}}">
+                                    <Grid BackgroundColor="Red"
+                                          Padding="30,0,30,0">
+                                        <Label Text="{StaticResource font-awesome-trash-empty}"
+                                               FontFamily="fontello"
+                                               FontSize="20"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+                                </SwipeItemView>
+                                <SwipeItemView  Command="{Binding Source={RelativeSource AncestorType={x:Type local:ITasksViewModel}}, Path=EditTaskCommand}"
+                                                CommandParameter="{Binding BindingContext, Source={RelativeSource AncestorType={x:Type SwipeView}}}">
+                                    <Grid BackgroundColor="Orange"
+                                          Padding="30,0,30,0">
+                                        <Label Text="{StaticResource font-awesome-pencil}"
+                                               FontFamily="fontello"
+                                               FontSize="20"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+                                </SwipeItemView>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Grid Padding="10" 
+                              x:DataType="task:ReadTaskWrapper">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+          
+                            <Label Text="{Binding Title}" 
+                                   LineBreakMode="NoWrap" 
+                                   Style="{DynamicResource ListItemTextStyle}" 
+                                   TextColor="{StaticResource Primary}"
+                                   FontSize="Large"/>
+                            <Label Grid.Row="1"
+                                   Text="{Binding CategoryName}" 
+                                   LineBreakMode="NoWrap" 
+                                   Style="{DynamicResource ListItemDetailTextStyle}" 
+                                   TextColor="{StaticResource Primary}"
+                                   FontSize="Small"/>
+                            <Label Text="{Binding IsExecuted, Converter={StaticResource BoolConverter}, ConverterParameter='Ukończone|Nieukończone'}"
+                                   LineBreakMode="NoWrap"
+                                   Style="{DynamicResource ListItemDetailTextStyle}"
+                                   TextColor="{StaticResource Primary}"
+                                   FontSize="Micro"
+                                   VerticalTextAlignment="End"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    NumberOfTapsRequired="1"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type local:ITasksViewModel}}, Path=TaskTapped}"		
+                                    CommandParameter="{Binding .}">
+                                </TapGestureRecognizer>
+                                
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                    </SwipeView>
+
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
