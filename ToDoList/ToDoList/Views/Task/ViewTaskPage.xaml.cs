@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToDoList.ViewModels.Category;
+using ToDoList.ViewModels.Task;
 using Xamarin.Forms;
 
 namespace ToDoList.Views.Task
@@ -9,7 +9,7 @@ namespace ToDoList.Views.Task
         public ViewTaskPage()
         {
             InitializeComponent();
-            BindingContext = Startup.ServiceProvider.GetService<IViewCategoryViewModel>();
+            BindingContext = Startup.ServiceProvider.GetService<IViewTaskViewModel>();
         }
     }
 }

@@ -88,31 +88,37 @@
                         <Grid Padding="10" 
                               x:DataType="task:ReadTaskWrapper">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-          
-                            <Label Text="{Binding Title}" 
+                            <CheckBox IsChecked="{Binding IsExecuted}"
+                                      Color="{StaticResource Primary}"/>
+                            <Label Grid.Column="1"
+                                   Text="{Binding Title}" 
                                    LineBreakMode="NoWrap" 
                                    Style="{DynamicResource ListItemTextStyle}" 
                                    TextColor="{StaticResource Primary}"
                                    FontSize="Large"/>
-                            <Label Grid.Row="1"
-                                   Text="{Binding CategoryName}" 
-                                   LineBreakMode="NoWrap" 
-                                   Style="{DynamicResource ListItemDetailTextStyle}" 
-                                   TextColor="{StaticResource Primary}"
-                                   FontSize="Small"/>
-                            <Label Text="{Binding IsExecuted, Converter={StaticResource BoolConverter}, ConverterParameter='Ukończone|Nieukończone'}"
-                                   LineBreakMode="NoWrap"
-                                   Style="{DynamicResource ListItemDetailTextStyle}"
-                                   TextColor="{StaticResource Primary}"
-                                   FontSize="Micro"
-                                   VerticalTextAlignment="End"/>
+                            <StackLayout Grid.Row="1"
+                                         Grid.Column="1"
+                                         Orientation="Horizontal">
+                                <Label Text="{StaticResource font-awesome-tag}"
+                                       FontFamily="fontello"
+                                       Style="{DynamicResource ListItemDetailTextStyle}" 
+                                       TextColor="{StaticResource Primary}"
+                                       FontSize="Small"
+                                       VerticalTextAlignment="Center"/>
+                                <Label Text="{Binding CategoryName}" 
+                                       LineBreakMode="NoWrap" 
+                                       Style="{DynamicResource ListItemDetailTextStyle}" 
+                                       TextColor="{StaticResource Primary}"
+                                       FontSize="Small"
+                                       VerticalTextAlignment="Center"/>
+                            </StackLayout>    
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer 
                                     NumberOfTapsRequired="1"

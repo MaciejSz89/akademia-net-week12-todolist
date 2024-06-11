@@ -38,6 +38,8 @@
             <x:String x:Key="font-awesome-tasks">&#xF0AE;</x:String>
             <x:String x:Key="font-awesome-info-circled">&#xE804;</x:String>
             <x:String x:Key="font-awesome-info">&#xF129;</x:String>
+            <x:String x:Key="font-awesome-calendar">&#xE805;</x:String>
+            
         </ResourceDictionary>        
     </Application.Resources>
 </Application>

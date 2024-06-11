@@ -5,31 +5,66 @@
              x:Class="ToDoList.Views.Task.ViewTaskPage"
              Title="{Binding Title}">
     <ContentPage.Resources>
-        <converters:BoolToStringConverter x:Key="BoolConverter"/>
+        <ResourceDictionary>
+            <converters:BoolToStringConverter x:Key="BoolConverter"/>
+            <Style TargetType="Label">
+                <Setter Property="TextColor"
+                        Value="{StaticResource Primary}"/>
+                <Setter Property="VerticalTextAlignment"
+                        Value="Center"/>
+            </Style>
+
+            <Style TargetType="CheckBox">
+                <Setter Property="Color"
+                        Value="{StaticResource Primary}"/>
+                <Setter Property="VerticalOptions"
+                        Value="Center"/>
+            </Style>
+
+        </ResourceDictionary>
     </ContentPage.Resources>
-    <StackLayout Spacing="20" Padding="15">
-        <Label Text="Text:" FontSize="Medium" />
-        <Label Text="{Binding Task.Title}" FontSize="Small"/>
-        <Label Text="Description:" FontSize="Medium" />
-        <Label Text="{Binding Task.Description}" FontSize="Small"/>        
-        <StackLayout Orientation="Horizontal">
-            <Label Text="Termin: "
-                   FontSize="Small" />
-            <Label Text="{Binding Task.Term, StringFormat='{0:dd-MM-yyyy}'}"                                    
-                   FontSize="Small" />
-        </StackLayout>
-        <StackLayout Orientation="Horizontal">
-            <Label Text="Ukończono: "
-                   FontSize="Small" />
-            <Label Text="{Binding Task.IsExecuted, Converter={StaticResource BoolConverter}, ConverterParameter='Tak|Nie'}"
-                   FontSize="Small" />
-        </StackLayout>
-        <StackLayout Orientation="Horizontal">
-            <Label Text="Kategoria: "
-                   FontSize="Small" />
-            <Label Text="{Binding Task.CategoryName}"
-                   FontSize="Small" />
-        </StackLayout>
-    </StackLayout>
-    
+    <Grid Padding="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <CheckBox IsChecked="{Binding Task.IsExecuted}" 
+                  />
+        <Label Grid.Column="1"
+               Text="{Binding Task.Title}" 
+               FontSize="Large"/>
+        <Label Grid.Row="1"
+               Text="{StaticResource font-awesome-tag}"
+               FontSize="Medium"
+               FontFamily="fontello"
+               HorizontalOptions="Center"/>
+        <Label Grid.Row="1"
+               Grid.Column="1"
+               Text="{Binding Task.CategoryName}"
+               FontSize="Medium" />
+        <Label Grid.Row="2"
+               Text="{StaticResource font-awesome-calendar}"
+               FontSize="Small" 
+               FontFamily="fontello"
+               HorizontalOptions="Center"/>
+        <Label Grid.Row="2"
+               Grid.Column="1"
+               Text="{Binding Task.Term, StringFormat='{0:dd-MM-yyyy}'}"                                    
+               FontSize="Small" />
+        <Label Grid.Row="3"
+               Grid.Column="1"
+               Text="{Binding Task.Description}" 
+               FontSize="Small"
+               LineBreakMode="WordWrap"/>
+
+
+    </Grid>
+
 </ContentPage>
