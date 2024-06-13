@@ -1,4 +1,5 @@
-﻿using ToDoList.Models.Wrappers.Task;
+﻿using System;
+using ToDoList.Models.Wrappers.Task;
 using Xamarin.Forms;
 
 namespace ToDoList.ViewModels.Task
@@ -8,5 +9,6 @@ namespace ToDoList.ViewModels.Task
         Command CancelCommand { get; }
         Command SaveCommand { get; }
         CreateTaskWrapper Task { get; set; }
+        DateTime Term { get; set; }
     }
 }

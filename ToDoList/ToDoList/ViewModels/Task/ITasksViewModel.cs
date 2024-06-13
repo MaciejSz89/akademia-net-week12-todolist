@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using MvvmHelpers;
+using System.Collections.ObjectModel;
 using ToDoList.Models.Wrappers.Task;
 using Xamarin.Forms;
 
@@ -15,8 +16,9 @@ namespace ToDoList.ViewModels.Task
         Command NextPageCommand { get; }
         Command PreviousPageCommand { get; }
         ReadTaskWrapper SelectedTask { get; set; }
-        ObservableCollection<ReadTaskWrapper> Tasks { get; }
+        ObservableRangeCollection<ReadTaskWrapper> Tasks { get; }
         Command<ReadTaskWrapper> TaskTapped { get; }
+        Command UpdateIsExecutedCommand { get; }
 
         void OnAppearing();
     }

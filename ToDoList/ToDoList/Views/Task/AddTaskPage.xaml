@@ -13,7 +13,7 @@
             <Label Text="Opis" FontSize="Medium" />
             <Editor Text="{Binding Task.Description, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
             <Label Text="Termin" FontSize="Medium" />
-            <DatePicker Format="dd-MM-yyyy" Date="{Binding Task.Term, Mode=TwoWay}" FontSize="Medium" Margin="0" />
+            <DatePicker Format="dd-MM-yyyy" Date="{Binding Term, Mode=TwoWay}" FontSize="Medium" Margin="0" />
             <Label Text="Kategoria" FontSize="Medium" />
             <Picker Title="-- wybierz kategorię --"
                     ItemsSource="{Binding Categories}"

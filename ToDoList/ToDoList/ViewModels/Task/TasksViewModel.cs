@@ -10,6 +10,10 @@ using ToDoList.Models.Wrappers.Task;
 using ToDoList.Services.Task;
 using ToDoList.Models.Converters;
 using System.Linq;
+using MvvmHelpers;
+using Android.Webkit;
+using System.ComponentModel;
+using static Android.Resource;
 
 namespace ToDoList.ViewModels.Task
 {
@@ -19,33 +23,39 @@ namespace ToDoList.ViewModels.Task
         private int _currentPage = 1;
         private int _lastPage = 1;
         private GetCategoriesParamsWrapper _getCategoriesParamsWrapper;
-        private const int pageSize = 4;
+        private const int _pageSize = 9;
         private readonly ITaskService _taskService;
 
         public TasksViewModel(ITaskService taskService)
         {
             Title = "Zadania";
-            Tasks = new ObservableCollection<ReadTaskWrapper>();
-            LoadTasksCommand = new Command(async () => await ExecuteLoadTasksCommand());
-            GetTasksParamsWrapper = new GetCategoriesParamsWrapper();
+            Tasks = new ObservableRangeCollection<ReadTaskWrapper>();
+            LoadTasksCommand = new Command(async () => await OnLoadTasks());
+            GetTasksParamsWrapper = new GetCategoriesParamsWrapper
+            {
+                PageSize = _pageSize,
+                PageNumber = 1,
+            };
 
             TaskTapped = new Command<ReadTaskWrapper>(OnTaskSelected);
 
-            AddTaskCommand = new Command(OnAddTask);
-            DeleteTaskCommand = new Command<ReadTaskWrapper>(async (x) => await OnDeleteTask(x));
+            AddTaskCommand = new Command(ExecuteAddTaskCommand);
+            DeleteTaskCommand = new Command<ReadTaskWrapper>(async (x) => await ExecuteDeleteTaskCommand(x));
             PreviousPageCommand = new Command(async (x) => await ExecutePreviousPageCommand(), ValidatePreviousPage);
             NextPageCommand = new Command(async (x) => await ExecuteNextPageCommand(), ValidateNextPage);
+            UpdateIsExecutedCommand = new Command<ReadTaskWrapper>(async (x) => await ExecuteUpdateIsExecutedCommand(x));
             _taskService = taskService;
         }
 
 
-        public ObservableCollection<ReadTaskWrapper> Tasks { get; }
+        public ObservableRangeCollection<ReadTaskWrapper> Tasks { get; }
         public Command LoadTasksCommand { get; }
 
         public Command AddTaskCommand { get; }
         public Command DeleteTaskCommand { get; }
         public Command PreviousPageCommand { get; }
         public Command NextPageCommand { get; }
+        public Command UpdateIsExecutedCommand { get; }
         public Command<ReadTaskWrapper> TaskTapped { get; }
         public int CurrentPage
         {
@@ -76,6 +86,7 @@ namespace ToDoList.ViewModels.Task
             }
         }
 
+
         private bool ValidateNextPage(object arg)
         {
             return CurrentPage != LastPage;
@@ -90,19 +101,22 @@ namespace ToDoList.ViewModels.Task
         {
             IsBusy = true;
             CurrentPage += 1;
-            await ExecuteLoadTasksCommand();
+            await LoadTasks();
+            IsBusy = false;
         }
 
         private async System.Threading.Tasks.Task ExecutePreviousPageCommand()
         {
             IsBusy = true;
             CurrentPage -= 1;
-            await ExecuteLoadTasksCommand();
+            await LoadTasks();
+            IsBusy = false;
         }
 
 
-        private async System.Threading.Tasks.Task OnDeleteTask(ReadTaskWrapper taskWrapper)
+        private async System.Threading.Tasks.Task ExecuteDeleteTaskCommand(ReadTaskWrapper taskWrapper)
         {
+            IsBusy = true;
             if (taskWrapper == null)
                 return;
 
@@ -113,23 +127,41 @@ namespace ToDoList.ViewModels.Task
 
             await _taskService.DeleteTaskAsync(taskWrapper.Id);
 
-            await ExecuteLoadTasksCommand();
+            await LoadTasks();
+            IsBusy = false;
+        }
+        private async System.Threading.Tasks.Task ExecuteUpdateIsExecutedCommand(ReadTaskWrapper taskWrapper)
+        {
+            if (taskWrapper == null || IsBusy)
+                return;
+
+            IsBusy = true;
+
+            try
+            {
+                if (taskWrapper.IsExecuted)
+                {
+                    await _taskService.FinishTaskAsync(taskWrapper.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                await LoadTasks(); 
+                IsBusy = false;
+            }
         }
 
-        private async System.Threading.Tasks.Task ExecuteLoadTasksCommand()
+        private async System.Threading.Tasks.Task OnLoadTasks()
         {
             IsBusy = true;
 
             try
             {
-                Tasks.Clear();
-                var tasksPage = await _taskService.GetTasksAsync(GetTasksParamsWrapper.ToDto());
-                var tasks = tasksPage.Tasks.Select(x => x.ToWrapper());
-
-                foreach (var task in tasks)
-                {
-                    Tasks.Add(task);
-                }
+                await LoadTasks();
             }
             catch (Exception ex)
             {
@@ -139,6 +171,18 @@ namespace ToDoList.ViewModels.Task
             {
                 IsBusy = false;
             }
+        }
+
+        private async System.Threading.Tasks.Task LoadTasks()
+        {
+            Tasks.Clear();
+            var tasksPage = await _taskService.GetTasksAsync(GetTasksParamsWrapper.ToDto());
+            var tasks = tasksPage.Tasks
+                                 .OrderBy(x => x.IsExecuted)
+                                 .ThenBy(x => x.Id)
+                                 .Select(x => x.ToWrapper());
+
+            Tasks.ReplaceRange(tasks);
         }
 
         public void OnAppearing()
@@ -157,7 +201,7 @@ namespace ToDoList.ViewModels.Task
             }
         }
 
-        private async void OnAddTask(object obj)
+        private async void ExecuteAddTaskCommand(object obj)
         {
             await Shell.Current.GoToAsync($"{nameof(AddTaskPage)}");
         }

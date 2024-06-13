@@ -35,6 +35,7 @@ namespace ToDoList.ViewModels.Task
 
         private async void Initialize()
         {
+            Term = DateTime.Now;
             var categoryDtos = await _categoryService.GetCategoriesAsync();
             foreach (var dto in categoryDtos)
             {
@@ -59,7 +60,15 @@ namespace ToDoList.ViewModels.Task
             }
         }
 
-
+        public DateTime Term
+        {
+            get => Task.Term is null ? DateTime.Now : (DateTime)Task.Term;
+            set
+            {
+                Task.Term = value;
+                OnPropertyChanged(nameof(Task.Term));
+            }
+        }
 
         public Command SaveCommand { get; }
         public Command CancelCommand { get; }

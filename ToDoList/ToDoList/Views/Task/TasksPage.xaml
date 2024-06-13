@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:ToDoList.ViewModels.Task"  
              xmlns:task="clr-namespace:ToDoList.Models.Wrappers.Task"  
              xmlns:converters="clr-namespace:ToDoList.Helpers.Converters"  
-             x:Name="BrowseItemsPage">
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             x:Name="BrowseTasksPage">
     <ContentPage.Resources>
         <converters:BoolToStringConverter x:Key="BoolConverter"/>
     </ContentPage.Resources>
@@ -96,7 +97,14 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <CheckBox IsChecked="{Binding IsExecuted}"
-                                      Color="{StaticResource Primary}"/>
+                                      Color="{StaticResource Primary}">
+                                <CheckBox.Behaviors>
+                                    <xct:EventToCommandBehavior
+                                        EventName="CheckedChanged"
+                                        Command="{Binding BindingContext.UpdateIsExecutedCommand, Source={x:Reference BrowseTasksPage}}"
+                                        CommandParameter="{Binding .}" />
+                                </CheckBox.Behaviors>
+                            </CheckBox>
                             <Label Grid.Column="1"
                                    Text="{Binding Title}" 
                                    LineBreakMode="NoWrap" 
