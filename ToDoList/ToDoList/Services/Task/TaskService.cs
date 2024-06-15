@@ -70,5 +70,11 @@ namespace ToDoList.Services.Task
             var stringContent = new StringContent(string.Empty);
             var response = await _httpClient.PutAsync($"Task/{id}/Finish", stringContent);
         }
+        public async System.Threading.Tasks.Task RestoreTaskAsync(int id)
+        {
+
+            var stringContent = new StringContent(string.Empty);
+            var response = await _httpClient.PutAsync($"Task/{id}/Restore", stringContent);
+        }
     }
 }

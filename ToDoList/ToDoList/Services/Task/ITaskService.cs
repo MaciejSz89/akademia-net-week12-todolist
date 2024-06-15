@@ -14,5 +14,6 @@ namespace ToDoList.Services.Task
         Task<ReadTaskDto> GetTaskAsync(int id);
         Task<ReadTasksPageDto> GetTasksAsync(GetTasksParamsDto param);
         System.Threading.Tasks.Task FinishTaskAsync(int id);
+        System.Threading.Tasks.Task RestoreTaskAsync(int id);
     }
 }

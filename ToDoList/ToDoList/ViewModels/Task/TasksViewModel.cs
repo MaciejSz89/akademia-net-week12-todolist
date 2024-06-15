@@ -15,6 +15,18 @@ using Android.Webkit;
 using System.ComponentModel;
 using static Android.Resource;
 
+
+public enum TaskSortMethod
+{
+    ByIdAscending,
+    ByIdDescending,
+    ByTitleAscending,
+    ByTitleDescending,
+    ByTermAscending,
+    ByTermDescending
+
+}
+
 namespace ToDoList.ViewModels.Task
 {
     public class TasksViewModel : ViewModelBase, ITasksViewModel
@@ -25,12 +37,13 @@ namespace ToDoList.ViewModels.Task
         private GetCategoriesParamsWrapper _getCategoriesParamsWrapper;
         private const int _pageSize = 9;
         private readonly ITaskService _taskService;
+        private bool _lockTasks;
 
         public TasksViewModel(ITaskService taskService)
         {
             Title = "Zadania";
             Tasks = new ObservableRangeCollection<ReadTaskWrapper>();
-            LoadTasksCommand = new Command(async () => await OnLoadTasks());
+            LoadTasksCommand = new Command(async () => await ExecuteLoadTasksCommand());
             GetTasksParamsWrapper = new GetCategoriesParamsWrapper
             {
                 PageSize = _pageSize,
@@ -99,6 +112,7 @@ namespace ToDoList.ViewModels.Task
 
         private async System.Threading.Tasks.Task ExecuteNextPageCommand()
         {
+
             IsBusy = true;
             CurrentPage += 1;
             await LoadTasks();
@@ -107,6 +121,7 @@ namespace ToDoList.ViewModels.Task
 
         private async System.Threading.Tasks.Task ExecutePreviousPageCommand()
         {
+
             IsBusy = true;
             CurrentPage -= 1;
             await LoadTasks();
@@ -116,6 +131,9 @@ namespace ToDoList.ViewModels.Task
 
         private async System.Threading.Tasks.Task ExecuteDeleteTaskCommand(ReadTaskWrapper taskWrapper)
         {
+            if (IsBusy)
+                return;
+
             IsBusy = true;
             if (taskWrapper == null)
                 return;
@@ -132,16 +150,22 @@ namespace ToDoList.ViewModels.Task
         }
         private async System.Threading.Tasks.Task ExecuteUpdateIsExecutedCommand(ReadTaskWrapper taskWrapper)
         {
-            if (taskWrapper == null || IsBusy)
+
+            if (taskWrapper == null || IsBusy || _lockTasks)
                 return;
 
-            IsBusy = true;
+    
+            var isExecuted = taskWrapper.IsExecuted;
 
             try
             {
-                if (taskWrapper.IsExecuted)
+                if (isExecuted)
                 {
                     await _taskService.FinishTaskAsync(taskWrapper.Id);
+                }
+                else
+                {
+                    await _taskService.RestoreTaskAsync(taskWrapper.Id);
                 }
             }
             catch (Exception ex)
@@ -150,12 +174,13 @@ namespace ToDoList.ViewModels.Task
             }
             finally
             {
-                await LoadTasks(); 
-                IsBusy = false;
+                IsBusy = true;
+                //  await LoadTasks();
+                //   IsBusy = false;
             }
         }
 
-        private async System.Threading.Tasks.Task OnLoadTasks()
+        private async System.Threading.Tasks.Task ExecuteLoadTasksCommand()
         {
             IsBusy = true;
 
@@ -175,7 +200,9 @@ namespace ToDoList.ViewModels.Task
 
         private async System.Threading.Tasks.Task LoadTasks()
         {
+
             Tasks.Clear();
+
             var tasksPage = await _taskService.GetTasksAsync(GetTasksParamsWrapper.ToDto());
             var tasks = tasksPage.Tasks
                                  .OrderBy(x => x.IsExecuted)
