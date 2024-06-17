@@ -15,7 +15,7 @@ namespace ToDoList.ViewModels.Account
     public class RegisterViewModel : ViewModelBase, IRegisterViewModel
     {
         private readonly IAccountService _accountService;
-        private RegisterWrapper _register;
+        private RegisterWrapper _register = null!;
 
         public Command LoginCommand { get; }
         public Command RegisterCommand { get; }
@@ -29,14 +29,14 @@ namespace ToDoList.ViewModels.Account
             }
         }
 
-        public string Message { get; set; }
+        public string Message { get; set; } = "";
 
         public RegisterViewModel()
         {
             RegisterUser = new RegisterWrapper();
             LoginCommand = new Command(OnLoginClicked);
             RegisterCommand = new Command(OnRegisterClicked);
-            _accountService = Startup.ServiceProvider.GetService<IAccountService>();
+            _accountService = Startup.ServiceProvider.GetService<IAccountService>()!;
         }
 
         private async void OnLoginClicked(object obj)
@@ -47,7 +47,10 @@ namespace ToDoList.ViewModels.Account
         private async void OnRegisterClicked(object obj)
         {
             IsBusy = true;
-            var registerUserDto = (obj as RegisterWrapper).ToDto();
+            var registerUserDto = (obj as RegisterWrapper)?.ToDto();
+            if (registerUserDto == null) 
+                return;
+
             var isSuccess = await _accountService.RegisterAsync(registerUserDto);
             if (isSuccess)
             {

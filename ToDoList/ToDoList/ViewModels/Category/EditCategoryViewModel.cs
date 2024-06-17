@@ -12,7 +12,7 @@ namespace ToDoList.ViewModels.Category
     [QueryProperty(nameof(Id), nameof(Id))]
     public class EditCategoryViewModel : ViewModelBase, IEditCategoryViewModel
     {
-        private WriteCategoryWrapper _category;
+        private WriteCategoryWrapper _category = null!;
         private int _id;
         private readonly ICategoryService _categoryService;
 
@@ -21,7 +21,7 @@ namespace ToDoList.ViewModels.Category
             SaveCommand = new AsyncCommand(OnSave, ValidateSave);
             CancelCommand = new Command(OnCancel);
             PropertyChanged +=
-                (_, __) => (SaveCommand as AsyncCommand).RaiseCanExecuteChanged();
+                (_, __) => (SaveCommand as AsyncCommand)?.RaiseCanExecuteChanged();
             _categoryService = categoryService;
        
         }
@@ -53,7 +53,7 @@ namespace ToDoList.ViewModels.Category
 
         private async void LoadTask(int id)
         {
-            Category = (await _categoryService.GetCategoryAsync(id)).ToWriteWrapper();
+            Category = (await _categoryService.GetCategoryAsync(id))?.ToWriteWrapper()!;
         }
 
         public ICommand SaveCommand { get; }

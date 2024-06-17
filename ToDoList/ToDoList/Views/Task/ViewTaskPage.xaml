@@ -3,10 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:ToDoList.Helpers.Converters"  
              x:Class="ToDoList.Views.Task.ViewTaskPage"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             x:Name="BrowseViewTaskPage">
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:BoolToStringConverter x:Key="BoolConverter"/>
+            <converters:NullToBoolConverter x:Key="NullConverter"/>
             <Style TargetType="Label">
                 <Setter Property="TextColor"
                         Value="{StaticResource Primary}"/>
@@ -20,7 +22,7 @@
                 <Setter Property="VerticalOptions"
                         Value="Center"/>
             </Style>
-
+            
         </ResourceDictionary>
     </ContentPage.Resources>
     <Grid Padding="15">
@@ -35,8 +37,21 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <CheckBox IsChecked="{Binding Task.IsExecuted}" 
-                  />
+
+        <Grid>
+            <CheckBox HorizontalOptions="StartAndExpand"
+                      InputTransparent="True"
+                      IsChecked="{Binding Task.IsExecuted}"
+                      IsEnabled="False"
+                      Style="{DynamicResource CustomItemCheckboxStyle}"/>
+            <BoxView Color="Transparent">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer NumberOfTapsRequired="1"
+                                          Command="{Binding BindingContext.UpdateIsExecutedCommand, Source={x:Reference BrowseViewTaskPage}}"
+                                          CommandParameter="{Binding Task}"/>
+                </BoxView.GestureRecognizers>
+            </BoxView>
+        </Grid>
         <Label Style="{DynamicResource CustomListItemTextStyle}"
                Grid.Column="1"
                Text="{Binding Task.Title}"/>
@@ -49,11 +64,13 @@
                Text="{Binding Task.CategoryName}"/>
         <Label Style="{DynamicResource CustomListItemDetailIconStyle}"
                Grid.Row="2"
-               Text="{StaticResource font-awesome-calendar}"/>
+               Text="{StaticResource font-awesome-calendar}"
+               IsVisible="{Binding Task.Term, Converter={StaticResource NullConverter}}"/>
         <Label Style="{DynamicResource CustomListItemDetailTextStyle}"
                Grid.Row="2"
                Grid.Column="1"
-               Text="{Binding Task.Term, StringFormat='{0:dd-MM-yyyy}'}" />
+               Text="{Binding Task.Term, StringFormat='{0:dd-MM-yyyy}'}"
+               IsVisible="{Binding Task.Term, Converter={StaticResource NullConverter}}"/>
         <Label Style="{DynamicResource CustomListItemDetailTextStyle}"
                Grid.Row="3"
                Grid.Column="1"

@@ -34,6 +34,8 @@
                 <Setter Property="Color" 
                         Value="{StaticResource Primary}"/>
                 <Setter Property="VerticalOptions" 
+                        Value="Center"/>              
+                <Setter Property="HorizontalOptions" 
                         Value="Center"/>
             </Style>
             

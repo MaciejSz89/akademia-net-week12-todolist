@@ -4,9 +4,20 @@ using System.Text;
 
 namespace ToDoList.Models.Wrappers.Category
 {
-    public class ReadCategoryWrapper
+    public class ReadCategoryWrapper : WrapperBase
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        private int _id;
+        private string _name = null!;
+
+        public int Id
+        {
+            get => _id;
+            set => SetProperty(ref _id, value);
+        }
+        public string Name
+        {
+            get => _name;
+            set => SetProperty(ref _name, value);
+        }
     }
 }

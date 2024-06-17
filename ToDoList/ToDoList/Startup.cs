@@ -13,6 +13,8 @@ using ToDoList.DelegatingHandlers;
 using ToDoList.Services;
 using ToDoList.Services.Account;
 using ToDoList.Services.Category;
+using ToDoList.Services.MessageDialog;
+using ToDoList.Services.Navigation;
 using ToDoList.Services.Task;
 using ToDoList.ViewModels.Account;
 using ToDoList.ViewModels.Category;
@@ -25,7 +27,7 @@ namespace ToDoList
 {
     public static class Startup
     {
-        public static IServiceProvider ServiceProvider { get; set; }
+        public static IServiceProvider ServiceProvider { get; set; } = null!;
 
         public static void Init()
         {
@@ -76,7 +78,8 @@ namespace ToDoList
                     .AddTransient<IViewCategoryViewModel, ViewCategoryViewModel>()
                     .AddTransient<ErrorsHandler>()
                     .AddTransient<GetCachedAccessTokenHandler>()
-                    .AddTransient<IMessageDialog, MessageDialog>(provider=>new MessageDialog(Shell.Current)) 
+                    .AddTransient<IMessageDialogService, MessageDialogService>(provider=>new MessageDialogService(Shell.Current)) 
+                    .AddTransient<INavigationService, NavigationService>(provider=>new NavigationService(Shell.Current)) 
                     .AddSingleton<App>();
 
             var httpClientBuilders = new List<IHttpClientBuilder>

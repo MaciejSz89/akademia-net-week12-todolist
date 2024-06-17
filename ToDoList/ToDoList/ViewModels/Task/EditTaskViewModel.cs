@@ -12,7 +12,7 @@ namespace ToDoList.ViewModels.Task
     [QueryProperty(nameof(Id), nameof(Id))]
     public class EditTaskViewModel : ViewModelBase, IEditTaskViewModel
     {
-        private UpdateTaskWrapper _task;
+        private UpdateTaskWrapper _task = null!;
         private int _id;
         private readonly ITaskService _taskService;
 

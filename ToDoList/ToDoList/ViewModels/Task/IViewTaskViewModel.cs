@@ -1,4 +1,5 @@
-﻿using ToDoList.Models.Wrappers.Task;
+﻿using MvvmHelpers.Commands;
+using ToDoList.Models.Wrappers.Task;
 
 namespace ToDoList.ViewModels.Task
 {
@@ -8,5 +9,6 @@ namespace ToDoList.ViewModels.Task
         ReadTaskWrapper Task { get; set; }
 
         void LoadTask(int id);
+        Command UpdateIsExecutedCommand { get; }
     }
 }

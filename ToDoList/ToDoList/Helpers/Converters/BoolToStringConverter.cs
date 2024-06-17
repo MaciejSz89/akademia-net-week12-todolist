@@ -12,8 +12,8 @@ namespace ToDoList.Helpers.Converters
         {
             if (value is bool boolValue)
             {
-                string trueText = parameter?.ToString().Split('|')[0];
-                string falseText = parameter?.ToString().Split('|')[1];
+                string trueText = parameter.ToString().Split('|')[0];
+                string falseText = parameter.ToString().Split('|')[1];
 
                 return boolValue ? trueText : falseText;
             }

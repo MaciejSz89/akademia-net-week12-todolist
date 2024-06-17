@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using ToDoList.Models;
 using ToDoList.Views;
 using ToDoList.Views.Task;
-using Xamarin.Forms;
 using ToDoList.Models.Wrappers.Task;
 using ToDoList.Services.Task;
 using ToDoList.Models.Converters;
@@ -16,6 +15,9 @@ using System.ComponentModel;
 using static Android.Resource;
 using System.Collections.Generic;
 using Xamarin.Forms.Internals;
+using MvvmHelpers.Commands;
+using ToDoList.Services.MessageDialog;
+using ToDoList.Services.Navigation;
 
 
 public enum TaskSortMethod
@@ -33,20 +35,25 @@ namespace ToDoList.ViewModels.Task
 {
     public class TasksViewModel : ViewModelBase, ITasksViewModel
     {
-        private ReadTaskWrapper _selectedCategory;
+        private ReadTaskWrapper? _selectedTask;
         private int _currentPage = 1;
         private int _lastPage = 1;
-        private GetCategoriesParamsWrapper _getCategoriesParamsWrapper;
+        private GetCategoriesParamsWrapper _getTasksParamsWrapper;
         private const int _pageSize = 9;
         private readonly ITaskService _taskService;
+        private readonly IMessageDialogService _messageDialogService;
+        private readonly INavigationService _navigationService;
         private TaskSortMethod _sortMethod;
 
-        public TasksViewModel(ITaskService taskService)
+        public TasksViewModel(ITaskService taskService,
+                              IMessageDialogService messageDialogService,
+                              INavigationService navigationService)
         {
             Title = "Zadania";
             Tasks = new ObservableRangeCollection<ReadTaskWrapper>();
             LoadTasksCommand = new Command(async () => await ExecuteLoadTasksCommand());
-            GetTasksParamsWrapper = new GetCategoriesParamsWrapper
+
+            _getTasksParamsWrapper = new GetCategoriesParamsWrapper
             {
                 PageSize = _pageSize,
                 PageNumber = 1,
@@ -61,6 +68,8 @@ namespace ToDoList.ViewModels.Task
             NextPageCommand = new Command(async (x) => await OnNextPageCommand(), ValidateNextPage);
             UpdateIsExecutedCommand = new Command<ReadTaskWrapper>(async (x) => await OnUpdateIsExecutedCommand(x));
             _taskService = taskService;
+            _messageDialogService = messageDialogService;
+            _navigationService = navigationService;
             _sortMethod = TaskSortMethod.ByTitleAscending;
         }
 
@@ -82,8 +91,8 @@ namespace ToDoList.ViewModels.Task
             {
                 SetProperty(ref _currentPage, value);
                 GetTasksParamsWrapper.PageNumber = value;
-                PreviousPageCommand.ChangeCanExecute();
-                NextPageCommand.ChangeCanExecute();
+                PreviousPageCommand.RaiseCanExecuteChanged();
+                NextPageCommand.RaiseCanExecuteChanged();
             }
         }
         public int LastPage
@@ -92,15 +101,15 @@ namespace ToDoList.ViewModels.Task
             set
             {
                 SetProperty(ref _lastPage, value);
-                NextPageCommand.ChangeCanExecute();
+                NextPageCommand.RaiseCanExecuteChanged();
             }
         }
         public GetCategoriesParamsWrapper GetTasksParamsWrapper
         {
-            get => _getCategoriesParamsWrapper;
+            get => _getTasksParamsWrapper;
             set
             {
-                SetProperty(ref _getCategoriesParamsWrapper, value);
+                SetProperty(ref _getTasksParamsWrapper, value);
             }
         }
 
@@ -142,7 +151,7 @@ namespace ToDoList.ViewModels.Task
             if (taskWrapper == null)
                 return;
 
-            var dialog = await Shell.Current.DisplayAlert("Usuwanie!", $"Czy na pewno chcesz usunąć zadanie: {taskWrapper.Id}", "Tak", "Nie");
+            var dialog = await _messageDialogService.ShowMessageConfirmAsync("Usuwanie!", $"Czy na pewno chcesz usunąć zadanie: {taskWrapper.Title}");
 
             if (!dialog)
                 return;
@@ -218,12 +227,12 @@ namespace ToDoList.ViewModels.Task
             SelectedTask = null;
         }
 
-        public ReadTaskWrapper SelectedTask
+        public ReadTaskWrapper? SelectedTask
         {
-            get => _selectedCategory;
+            get => _selectedTask;
             set
             {
-                SetProperty(ref _selectedCategory, value);
+                SetProperty(ref _selectedTask, value);
                 OnTaskSelected(value);
             }
         }
@@ -231,20 +240,21 @@ namespace ToDoList.ViewModels.Task
 
         private async void OnAddTaskCommand(object obj)
         {
-            await Shell.Current.GoToAsync($"{nameof(AddTaskPage)}");
+           await _navigationService.GoToPageRelative(nameof(AddTaskPage));
         }
 
         private async void OnEditTaskCommand(ReadTaskWrapper taskWrapper)
         {
-            await Shell.Current.GoToAsync($"{nameof(EditTaskPage)}/{taskWrapper.Id}");
+            await _navigationService.GoToPageRelative(nameof(EditTaskPage), taskWrapper.Id.ToString());
         }
-        async void OnTaskSelected(ReadTaskWrapper task)
+        async void OnTaskSelected(ReadTaskWrapper? task)
         {
             if (task == null)
                 return;
 
             // This will push the TaskDetailPage onto the navigation stack
-            await Shell.Current.GoToAsync($"{nameof(ViewTaskPage)}?{nameof(ViewTaskViewModel.Id)}={task.Id}");
+            var param = new KeyValuePair<string, string>(nameof(ViewTaskViewModel.Id), task.Id.ToString());
+            await _navigationService.GoToPageRelative(nameof(ViewTaskPage), param);
         }
 
         private void SortTasks()

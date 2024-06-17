@@ -6,15 +6,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ToDoList.Services;
+using ToDoList.Services.MessageDialog;
 using Xamarin.Forms;
 
 namespace ToDoList.DelegatingHandlers
 {
     public class ErrorsHandler : DelegatingHandler
     {
-        private readonly IMessageDialog _messageDialog;
+        private readonly IMessageDialogService _messageDialog;
 
-        public ErrorsHandler(IMessageDialog messageDialog)
+        public ErrorsHandler(IMessageDialogService messageDialog)
         {
             _messageDialog = messageDialog;
         }
@@ -39,12 +40,12 @@ namespace ToDoList.DelegatingHandlers
 
 
             }
-            catch (HttpRequestException e)
+            catch (HttpRequestException)
             {
                 await ShowError("Błąd żądania");
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 await ShowError("Błąd");
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);
@@ -55,7 +56,7 @@ namespace ToDoList.DelegatingHandlers
         private async Task HandleErrors(HttpResponseMessage response, string uriLocalPath)
         {
             string errorTitle = "Błąd";
-            string errorMessage;
+            string? errorMessage;
             switch (response.StatusCode)
             {
                 case HttpStatusCode.Unauthorized:

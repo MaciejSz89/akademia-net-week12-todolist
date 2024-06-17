@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using ToDoList.Models;
@@ -15,8 +16,8 @@ namespace ToDoList.ViewModels.Task
 {
     public class AddTaskViewModel : ViewModelBase, IAddTaskViewModel
     {
-        private CreateTaskWrapper _task;
-        private ReadCategoryWrapper _selectedCategory;
+        private CreateTaskWrapper _task = null!;
+        private ReadCategoryWrapper _selectedCategory = null!;
         private readonly ITaskService _taskService;
         private readonly ICategoryService _categoryService;
 
@@ -37,10 +38,16 @@ namespace ToDoList.ViewModels.Task
         {
             Term = DateTime.Now;
             var categoryDtos = await _categoryService.GetCategoriesAsync();
-            foreach (var dto in categoryDtos)
+            if (categoryDtos != null && categoryDtos.Any())
             {
-                Categories.Add(dto.ToWrapper());
+                foreach (var dto in categoryDtos)
+                {
+                    if (dto == null)
+                        continue;
+                    Categories.Add(dto.ToWrapper());
+                }
             }
+
         }
 
         private bool ValidateSave()
@@ -81,7 +88,7 @@ namespace ToDoList.ViewModels.Task
 
         private async void OnSave()
         {
-            
+
 
             await _taskService.AddTaskAsync(Task.ToDto());
 

@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace ToDoList.Services
+namespace ToDoList.Services.MessageDialog
 {
-    public class MessageDialog : IMessageDialog
+    public class MessageDialogService : IMessageDialogService
     {
         private readonly Page _page;
 
-        public MessageDialog(Page page)
+        public MessageDialogService(Page page)
         {
             _page = page;
         }
@@ -27,6 +28,11 @@ namespace ToDoList.Services
             {
                 await _page.DisplayAlert(title, message, "OK");
             });
+        }
+
+        public async Task<bool> ShowMessageConfirmAsync(string title, string message)
+        {
+            return await Shell.Current.DisplayAlert(title, message, "Tak", "Nie");
         }
     }
 }

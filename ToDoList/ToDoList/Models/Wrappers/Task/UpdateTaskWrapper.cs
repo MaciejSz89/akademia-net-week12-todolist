@@ -2,12 +2,38 @@
 
 namespace ToDoList.Models.Wrappers.Task
 {
-    public class UpdateTaskWrapper
+    public class UpdateTaskWrapper : WrapperBase
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public DateTime? Term { get; set; }
-        public bool IsExecuted { get; set; }
-        public int CategoryId { get; set; }
+        private string _title = null!;
+        private string _description = null!;
+        private DateTime? _term;
+        private bool _isExecuted;
+        private int _categoryId;
+
+        public string Title
+        {
+            get => _title;
+            set => SetProperty(ref _title, value);
+        }
+        public string Description
+        {
+            get => _description;
+            set => SetProperty(ref _description, value);
+        }
+        public DateTime? Term
+        {
+            get => _term;
+            set => SetProperty(ref _term, value);
+        }
+        public bool IsExecuted
+        {
+            get => _isExecuted;
+            set => SetProperty(ref _isExecuted, value);
+        }
+        public int CategoryId
+        {
+            get => _categoryId;
+            set => SetProperty(ref _categoryId, value);
+        }
     }
 }

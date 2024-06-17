@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Android.Webkit;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,8 @@ namespace ToDoList.Services.Category
 
             var json = await response.Content.ReadAsStringAsync();
             var category = JsonConvert.DeserializeObject<ReadCategoryDto>(json);
+            if (category == null)
+                throw new NullReferenceException(nameof(category));
             return category;
         }
 
@@ -56,6 +59,8 @@ namespace ToDoList.Services.Category
             var json = await response.Content.ReadAsStringAsync();
 
             var categories = JsonConvert.DeserializeObject<IEnumerable<ReadCategoryDto>>(json);
+            if (categories == null)
+                throw new NullReferenceException(nameof(categories));
             return categories;
         }
 
@@ -67,6 +72,8 @@ namespace ToDoList.Services.Category
 
             var json = await response.Content.ReadAsStringAsync();
             var categoryPage = JsonConvert.DeserializeObject<ReadCategoriesPageDto>(json);
+            if (categoryPage == null)
+                throw new NullReferenceException($"{nameof(categoryPage)}");
             return categoryPage;
         }
 

@@ -16,7 +16,7 @@ namespace ToDoList.ViewModels.Category
         ICommand NextPageCommand { get; }
         ICommand PreviousPageCommand { get; }
         ICommand CategoryTapped { get; }
-        ReadCategoryWrapper SelectedCategory { get; set; }
+        ReadCategoryWrapper? SelectedCategory { get; set; }
         ObservableRangeCollection<ReadCategoryWrapper> Categories { get; }
 
         void OnAppearing();

@@ -16,7 +16,7 @@ namespace ToDoList.ViewModels.Category
 {
     public class CategoriesViewModel : ViewModelBase, ICategoriesViewModel
     {
-        private ReadCategoryWrapper _selectedCategory;
+        private ReadCategoryWrapper? _selectedCategory;
         private int _currentPage = 1;
         private int _lastPage = 1;
         private GetCategoriesParamsWrapper _getCategoriesParamsWrapper;
@@ -28,7 +28,7 @@ namespace ToDoList.ViewModels.Category
             Title = "Kategorie";
             Categories = new ObservableRangeCollection<ReadCategoryWrapper>();
             LoadCategoriesCommand = new AsyncCommand(() => ExecuteLoadCategoriesCommand());
-            GetCategoriesParamsWrapper = new GetCategoriesParamsWrapper();
+            _getCategoriesParamsWrapper = new GetCategoriesParamsWrapper();
 
             CategoryTapped = new MvvmHelpers.Commands.Command<ReadCategoryWrapper>(OnCategorySelected);
 
@@ -57,8 +57,8 @@ namespace ToDoList.ViewModels.Category
             {
                 SetProperty(ref _currentPage, value);
                 GetCategoriesParamsWrapper.PageNumber = value;
-                (PreviousPageCommand as Command).RaiseCanExecuteChanged();
-                (NextPageCommand as Command).RaiseCanExecuteChanged();
+                (PreviousPageCommand as Command)?.RaiseCanExecuteChanged();
+                (NextPageCommand as Command)?.RaiseCanExecuteChanged();
             }
         }
         public int LastPage
@@ -67,7 +67,7 @@ namespace ToDoList.ViewModels.Category
             set
             {
                 SetProperty(ref _lastPage, value);
-                (NextPageCommand as Command).RaiseCanExecuteChanged();
+                (NextPageCommand as Command)?.RaiseCanExecuteChanged();
             }
         }
         public GetCategoriesParamsWrapper GetCategoriesParamsWrapper
@@ -151,6 +151,8 @@ namespace ToDoList.ViewModels.Category
         {
 
             var categoriesPage = await _categoryService.GetCategoriesAsync(GetCategoriesParamsWrapper.ToDto());
+            if(categoriesPage == null) 
+                throw new NullReferenceException(nameof(categoriesPage));
             var categories = categoriesPage.Categories
                                            .OrderBy(x => x.Id)
                                            .Select(x => x.ToWrapper())
@@ -167,7 +169,7 @@ namespace ToDoList.ViewModels.Category
             SelectedCategory = null;
         }
 
-        public ReadCategoryWrapper SelectedCategory
+        public ReadCategoryWrapper? SelectedCategory
         {
             get => _selectedCategory;
             set
@@ -182,7 +184,7 @@ namespace ToDoList.ViewModels.Category
             await Shell.Current.GoToAsync($"{nameof(AddCategoryPage)}");
         }
 
-        async void OnCategorySelected(ReadCategoryWrapper category)
+        async void OnCategorySelected(ReadCategoryWrapper? category)
         {
             if (category == null)
                 return;

@@ -36,7 +36,7 @@
                             <SwipeItems>
                                 <SwipeItemView Command="{Binding Source={RelativeSource AncestorType={x:Type local:ITasksViewModel}}, Path=EditTaskCommand}"
                                                CommandParameter="{Binding BindingContext, Source={RelativeSource AncestorType={x:Type SwipeView}}}">
-                                                
+
                                     <Grid BackgroundColor="Orange"
                                           Padding="30,0,30,0">
                                         <Label Text="{StaticResource font-awesome-pencil}"
@@ -76,7 +76,7 @@
                                 </SwipeItemView>
                                 <SwipeItemView Command="{Binding Source={RelativeSource AncestorType={x:Type local:ITasksViewModel}}, Path=EditTaskCommand}"
                                                CommandParameter="{Binding BindingContext, Source={RelativeSource AncestorType={x:Type SwipeView}}}">
-                                    
+
                                     <Grid BackgroundColor="Orange"
                                           Padding="30,0,30,0">
                                         <Label Text="{StaticResource font-awesome-pencil}"
@@ -90,6 +90,41 @@
                         </SwipeView.RightItems>
                         <Grid Padding="10" 
                               x:DataType="task:ReadTaskWrapper">
+                            <Grid.Triggers>
+                                <DataTrigger TargetType="Grid" 
+                                             Binding="{Binding IsExecuted}" 
+                                             Value="True">
+                                    <Setter Property="BackgroundColor" 
+                                            Value="#EEEEEE"/>
+                                </DataTrigger>
+
+                            </Grid.Triggers>
+
+                            <Grid.Resources>
+
+                                <Style TargetType="CheckBox"
+                                       Class="CheckableCheckboxStyle">
+                                    <Style.Triggers>
+                                        <DataTrigger TargetType="CheckBox" 
+                                               Binding="{Binding IsExecuted}" 
+                                               Value="True">
+                                            <Setter Property="Color" 
+                                            Value="#AAAAAA"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                                <Style TargetType="Label"
+                                       Class="CheckableListItemTextStyle">
+                                    <Style.Triggers>
+                                        <DataTrigger TargetType="Label" 
+                                                     Binding="{Binding IsExecuted}" 
+                                                     Value="True">
+                                            <Setter Property="TextColor" 
+                                                  Value="#AAAAAA"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Resources>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition/>
@@ -102,7 +137,9 @@
                                 <CheckBox HorizontalOptions="StartAndExpand"
                                           InputTransparent="True"
                                           IsChecked="{Binding IsExecuted}"
-                                          IsEnabled="False"/>
+                                          IsEnabled="False"
+                                          Style="{DynamicResource CustomItemCheckboxStyle}"
+                                          StyleClass="CheckableCheckboxStyle"/>
                                 <BoxView Color="Transparent">
                                     <BoxView.GestureRecognizers>
                                         <TapGestureRecognizer NumberOfTapsRequired="1"
@@ -110,29 +147,32 @@
                                                               CommandParameter="{Binding .}"/>
                                     </BoxView.GestureRecognizers>
                                 </BoxView>
-                             </Grid>
+                            </Grid>
                             <Label Grid.Column="1"
                                    Text="{Binding Title}" 
                                    LineBreakMode="NoWrap" 
-                                   Style="{DynamicResource CustomListItemTextStyle}" />
+                                   Style="{DynamicResource CustomListItemTextStyle}"
+                                   StyleClass="CheckableListItemTextStyle" />
                             <StackLayout Grid.Row="1"
                                          Grid.Column="1"
                                          Orientation="Horizontal">
                                 <Label Text="{StaticResource font-awesome-tag}"
-                                       Style="{DynamicResource CustomListItemDetailIconStyle}"                                   
+                                       Style="{DynamicResource CustomListItemDetailIconStyle}" 
+                                       StyleClass="CheckableListItemTextStyle" 
                                        VerticalTextAlignment="Center"/>
                                 <Label Text="{Binding CategoryName}" 
                                        LineBreakMode="NoWrap" 
                                        Style="{DynamicResource CustomListItemDetailTextStyle}" 
+                                       StyleClass="CheckableListItemTextStyle"
                                        VerticalTextAlignment="Center"/>
-                            </StackLayout>    
+                            </StackLayout>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer 
                                     NumberOfTapsRequired="1"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type local:ITasksViewModel}}, Path=TaskTapped}"		
                                     CommandParameter="{Binding .}">
                                 </TapGestureRecognizer>
-                                
+
                             </Grid.GestureRecognizers>
                         </Grid>
 

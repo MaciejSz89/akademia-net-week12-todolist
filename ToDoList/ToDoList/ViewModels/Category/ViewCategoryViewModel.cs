@@ -17,7 +17,7 @@ namespace ToDoList.ViewModels.Category
 
 
         private int _id;
-        private ReadCategoryWrapper _category;
+        private ReadCategoryWrapper _category = null!;
         private readonly ICategoryService _categoryService;
 
         public ViewCategoryViewModel(ICategoryService categoryService)
@@ -62,7 +62,7 @@ namespace ToDoList.ViewModels.Category
         public async void LoadCategory(int id)
         {
             var categoryDto = await _categoryService.GetCategoryAsync(id);
-            Category = categoryDto.ToWrapper();
+            Category = categoryDto!.ToWrapper();
         }
     }
 }

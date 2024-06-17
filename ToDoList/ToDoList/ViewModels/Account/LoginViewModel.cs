@@ -16,7 +16,7 @@ namespace ToDoList.ViewModels.Account
     public class LoginViewModel : ViewModelBase, ILoginViewModel
     {
         private readonly IAccountService _accountService;
-        private LoginWrapper _login;
+        private LoginWrapper _login = null!;
 
         public Command LoginCommand { get; }
         public Command RegisterCommand { get; }
@@ -55,14 +55,17 @@ namespace ToDoList.ViewModels.Account
 
             LoginCommand = new Command(OnLoginClicked);
             RegisterCommand = new Command(OnRegisterClicked);
-            _accountService = Startup.ServiceProvider.GetService<IAccountService>();
+            _accountService = Startup.ServiceProvider.GetService<IAccountService>()!;
         }
 
         private async void OnLoginClicked(object obj)
         {
             IsBusy = true;
 
-            var loginUserDto = (obj as LoginWrapper).ToDto();
+            var loginUserDto = (obj as LoginWrapper)?.ToDto();
+            if (loginUserDto == null)
+                return;
+
             var isSuccess = await _accountService.LoginAsync(loginUserDto);
             if (isSuccess)
             {

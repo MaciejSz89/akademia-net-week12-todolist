@@ -4,12 +4,38 @@ using System.Text;
 
 namespace ToDoList.Models.Wrappers.Task
 {
-    public class GetCategoriesParamsWrapper
+    public class GetCategoriesParamsWrapper : WrapperBase
     {
-        public bool? IsExecuted { get; set; }
-        public int? CategoryId { get; set; }
-        public string Title { get; set; }
-        public int PageNumber { get; set; } = 1;
-        public int PageSize { get; set; } = 4;
+        private bool? _isExecuted;
+        private int? _categoryId;
+        private string _title = null!;
+        private int _pageNumber = 1;
+        private int _pageSize = 4;
+
+        public bool? IsExecuted
+        {
+            get => _isExecuted;
+            set => SetProperty(ref _isExecuted, value);
+        }
+        public int? CategoryId
+        {
+            get => _categoryId;
+            set => SetProperty(ref _categoryId, value);
+        }
+        public string Title
+        {
+            get => _title;
+            set => SetProperty(ref _title, value);
+        }
+        public int PageNumber
+        {
+            get => _pageNumber;
+            set => SetProperty(ref _pageNumber, value);
+        }
+        public int PageSize
+        {
+            get => _pageSize;
+            set => SetProperty(ref _pageSize, value);
+        }
     }
 }

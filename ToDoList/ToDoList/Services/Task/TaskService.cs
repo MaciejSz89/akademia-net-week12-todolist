@@ -47,6 +47,8 @@ namespace ToDoList.Services.Task
 
             var json = await response.Content.ReadAsStringAsync();
             var task = JsonConvert.DeserializeObject<ReadTaskDto>(json);
+            if (task == null)
+                throw new NullReferenceException(nameof(task)); 
             return task;
         }
 
@@ -57,6 +59,8 @@ namespace ToDoList.Services.Task
 
             var json = await response.Content.ReadAsStringAsync();
             var taskPage = JsonConvert.DeserializeObject<ReadTasksPageDto>(json);
+            if (taskPage == null)
+                throw new NullReferenceException(nameof(taskPage));
             return taskPage;
         }
 

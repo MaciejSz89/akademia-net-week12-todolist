@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MvvmHelpers.Commands;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using ToDoList.Models;
@@ -15,12 +16,14 @@ namespace ToDoList.ViewModels.Task
 
 
         private int _id;
-        private ReadTaskWrapper _task;
+        private ReadTaskWrapper _task = null!;
         private readonly ITaskService _taskService;
 
         public ViewTaskViewModel(ITaskService taskService)
         {
             _taskService = taskService;
+            UpdateIsExecutedCommand = new MvvmHelpers.Commands.Command<ReadTaskWrapper>(async (x) => await OnUpdateIsExecutedCommand(x));
+            
         }
 
         public int Id
@@ -45,10 +48,42 @@ namespace ToDoList.ViewModels.Task
             }
         }
 
+        public MvvmHelpers.Commands.Command UpdateIsExecutedCommand { get; }
+
         public async void LoadTask(int id)
         {
             var taskDto = await _taskService.GetTaskAsync(id);
             Task = taskDto.ToWrapper();
+        }
+
+        private async System.Threading.Tasks.Task OnUpdateIsExecutedCommand(ReadTaskWrapper taskWrapper)
+        {
+
+            if (taskWrapper == null || IsBusy)
+                return;
+
+
+
+            try
+            {
+                if (!taskWrapper.IsExecuted)
+                {
+                    await _taskService.FinishTaskAsync(taskWrapper.Id);
+                }
+                else
+                {
+                    await _taskService.RestoreTaskAsync(taskWrapper.Id);
+
+                }
+                taskWrapper.IsExecuted = !taskWrapper.IsExecuted;
+                OnPropertyChanged(nameof(taskWrapper.IsExecuted));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+
+
         }
     }
 }

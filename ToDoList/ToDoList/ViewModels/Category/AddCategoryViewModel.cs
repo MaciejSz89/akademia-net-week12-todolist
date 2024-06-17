@@ -14,7 +14,7 @@ namespace ToDoList.ViewModels.Category
 {
     public class AddCategoryViewModel : ViewModelBase, IAddCategoryViewModel
     {
-        private WriteCategoryWrapper _category;
+        private WriteCategoryWrapper _category = null!;
         private readonly ICategoryService _categoryService;
 
         public AddCategoryViewModel(ICategoryService categoryService)
@@ -23,7 +23,7 @@ namespace ToDoList.ViewModels.Category
             SaveCommand = new AsyncCommand(OnSave, ValidateSave);
             CancelCommand = new Command(OnCancel);
             PropertyChanged +=
-                (_, __) => (SaveCommand as AsyncCommand).RaiseCanExecuteChanged();
+                (_, __) => (SaveCommand as AsyncCommand)?.RaiseCanExecuteChanged();
             _categoryService = categoryService;
         }
 
