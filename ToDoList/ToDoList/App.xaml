@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="ToDoList.App">
     <!--
         Define global resources and styles here, that apply to all pages in your app.
@@ -28,6 +29,55 @@
                     </VisualStateGroupList>
                 </Setter>
             </Style>
+            
+            <Style TargetType="CheckBox">
+                <Setter Property="Color" 
+                        Value="{StaticResource Primary}"/>
+                <Setter Property="VerticalOptions" 
+                        Value="Center"/>
+            </Style>
+            
+            
+            <Style x:Key="CustomListItemTextStyle"
+                   TargetType="Label">
+                <Setter Property="TextColor"
+                        Value="{StaticResource Primary}"/>
+                <Setter Property="FontSize"
+                        Value="Large"/>
+                <Setter Property="VerticalOptions" 
+                        Value="Center"/>
+            </Style>
+
+            <Style x:Key="CustomListItemIconStyle"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CustomListItemTextStyle}">
+                <Setter Property="FontFamily"
+                        Value="fontello"/>
+                <Setter Property="Margin"
+                        Value="8"/>
+                <Setter Property="HorizontalOptions"
+                        Value="Center"/>
+            </Style>
+
+            <Style x:Key="CustomListItemDetailTextStyle"
+                   TargetType="Label">
+                <Setter Property="TextColor"
+                        Value="{StaticResource Primary}"/>
+                <Setter Property="FontSize"
+                        Value="Small"/>
+                <Setter Property="VerticalOptions" 
+                        Value="Center"/>
+            </Style>
+
+            <Style x:Key="CustomListItemDetailIconStyle"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CustomListItemDetailTextStyle}">
+                <Setter Property="FontFamily"
+                        Value="fontello"/>
+                <Setter Property="HorizontalOptions"
+                 Value="Center"/>
+            </Style>
+
             <x:String x:Key="font-awesome-share">&#xF1E0;</x:String>
             <x:String x:Key="font-awesome-tag">&#xE803;</x:String>
             <x:String x:Key="font-awesome-pencil">&#xE801;</x:String>
@@ -39,7 +89,7 @@
             <x:String x:Key="font-awesome-info-circled">&#xE804;</x:String>
             <x:String x:Key="font-awesome-info">&#xF129;</x:String>
             <x:String x:Key="font-awesome-calendar">&#xE805;</x:String>
-            
-        </ResourceDictionary>        
+
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

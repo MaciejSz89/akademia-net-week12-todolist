@@ -37,31 +37,27 @@
         </Grid.ColumnDefinitions>
         <CheckBox IsChecked="{Binding Task.IsExecuted}" 
                   />
-        <Label Grid.Column="1"
-               Text="{Binding Task.Title}" 
-               FontSize="Large"/>
-        <Label Grid.Row="1"
-               Text="{StaticResource font-awesome-tag}"
-               FontSize="Medium"
-               FontFamily="fontello"
-               HorizontalOptions="Center"/>
-        <Label Grid.Row="1"
+        <Label Style="{DynamicResource CustomListItemTextStyle}"
                Grid.Column="1"
-               Text="{Binding Task.CategoryName}"
-               FontSize="Medium" />
-        <Label Grid.Row="2"
-               Text="{StaticResource font-awesome-calendar}"
-               FontSize="Small" 
-               FontFamily="fontello"
-               HorizontalOptions="Center"/>
-        <Label Grid.Row="2"
+               Text="{Binding Task.Title}"/>
+        <Label Style="{DynamicResource CustomListItemDetailIconStyle}"
+               Grid.Row="1"
+               Text="{StaticResource font-awesome-tag}"/>
+        <Label Style="{DynamicResource CustomListItemDetailTextStyle}"
+               Grid.Row="1"
                Grid.Column="1"
-               Text="{Binding Task.Term, StringFormat='{0:dd-MM-yyyy}'}"                                    
-               FontSize="Small" />
-        <Label Grid.Row="3"
+               Text="{Binding Task.CategoryName}"/>
+        <Label Style="{DynamicResource CustomListItemDetailIconStyle}"
+               Grid.Row="2"
+               Text="{StaticResource font-awesome-calendar}"/>
+        <Label Style="{DynamicResource CustomListItemDetailTextStyle}"
+               Grid.Row="2"
+               Grid.Column="1"
+               Text="{Binding Task.Term, StringFormat='{0:dd-MM-yyyy}'}" />
+        <Label Style="{DynamicResource CustomListItemDetailTextStyle}"
+               Grid.Row="3"
                Grid.Column="1"
                Text="{Binding Task.Description}" 
-               FontSize="Small"
                LineBreakMode="WordWrap"/>
 
 

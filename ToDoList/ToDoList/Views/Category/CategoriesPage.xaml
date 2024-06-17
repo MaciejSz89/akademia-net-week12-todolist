@@ -92,14 +92,16 @@
                         <Grid Padding="10" 
                               x:DataType="category:ReadCategoryWrapper">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <Label Text="{Binding Name}" 
+                            <Label Text="{StaticResource font-awesome-tag}" 
                                    LineBreakMode="NoWrap" 
-                                   Style="{DynamicResource ListItemTextStyle}" 
-                                   FontSize="20" 
-                                   TextColor="{StaticResource Primary}"/>
+                                   Style="{DynamicResource CustomListItemIconStyle}" />
+                            <Label Grid.Column="1" 
+                                   Text="{Binding Name}" 
+                                   LineBreakMode="NoWrap" 
+                                   Style="{DynamicResource CustomListItemTextStyle}" />
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer 
                                 NumberOfTapsRequired="1"

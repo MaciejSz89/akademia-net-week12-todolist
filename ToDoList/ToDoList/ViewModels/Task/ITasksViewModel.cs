@@ -12,6 +12,7 @@ namespace ToDoList.ViewModels.Task
         Command DeleteTaskCommand { get; }
         GetCategoriesParamsWrapper GetTasksParamsWrapper { get; set; }
         int LastPage { get; set; }
+        Command EditTaskCommand { get; }
         Command LoadTasksCommand { get; }
         Command NextPageCommand { get; }
         Command PreviousPageCommand { get; }

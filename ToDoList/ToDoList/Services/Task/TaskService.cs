@@ -31,10 +31,13 @@ namespace ToDoList.Services.Task
             var response = await _httpClient.PostAsync("Task", stringContent);
         }
 
-        public async System.Threading.Tasks.Task DeleteTaskAsync(int id)
+        public async System.Threading.Tasks.Task<bool> DeleteTaskAsync(int id)
         {
             var response = await _httpClient.DeleteAsync($"Task/{id}");
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                return true;
 
+            return false;
         }
 
         public async Task<ReadTaskDto> GetTaskAsync(int id)

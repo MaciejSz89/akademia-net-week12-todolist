@@ -34,8 +34,9 @@
                     <SwipeView>
                         <SwipeView.LeftItems>
                             <SwipeItems>
-                                <SwipeItemView  Command="{Binding Source={RelativeSource AncestorType={x:Type local:ITasksViewModel}}, Path=EditTaskCommand}"
-                                                CommandParameter="{Binding BindingContext, Source={RelativeSource AncestorType={x:Type SwipeView}}}">
+                                <SwipeItemView Command="{Binding Source={RelativeSource AncestorType={x:Type local:ITasksViewModel}}, Path=EditTaskCommand}"
+                                               CommandParameter="{Binding BindingContext, Source={RelativeSource AncestorType={x:Type SwipeView}}}">
+                                                
                                     <Grid BackgroundColor="Orange"
                                           Padding="30,0,30,0">
                                         <Label Text="{StaticResource font-awesome-pencil}"
@@ -73,8 +74,9 @@
                                                VerticalOptions="Center" />
                                     </Grid>
                                 </SwipeItemView>
-                                <SwipeItemView  Command="{Binding Source={RelativeSource AncestorType={x:Type local:ITasksViewModel}}, Path=EditTaskCommand}"
-                                                CommandParameter="{Binding BindingContext, Source={RelativeSource AncestorType={x:Type SwipeView}}}">
+                                <SwipeItemView Command="{Binding Source={RelativeSource AncestorType={x:Type local:ITasksViewModel}}, Path=EditTaskCommand}"
+                                               CommandParameter="{Binding BindingContext, Source={RelativeSource AncestorType={x:Type SwipeView}}}">
+                                    
                                     <Grid BackgroundColor="Orange"
                                           Padding="30,0,30,0">
                                         <Label Text="{StaticResource font-awesome-pencil}"
@@ -96,35 +98,32 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <CheckBox IsChecked="{Binding IsExecuted}"
-                                      Color="{StaticResource Primary}">
-                                <CheckBox.Behaviors>
-                                    <xct:EventToCommandBehavior
-                                        EventName="CheckedChanged"
-                                        Command="{Binding BindingContext.UpdateIsExecutedCommand, Source={x:Reference BrowseTasksPage}}"
-                                        CommandParameter="{Binding .}" />
-                                </CheckBox.Behaviors>
-                            </CheckBox>
+                            <Grid>
+                                <CheckBox HorizontalOptions="StartAndExpand"
+                                          InputTransparent="True"
+                                          IsChecked="{Binding IsExecuted}"
+                                          IsEnabled="False"/>
+                                <BoxView Color="Transparent">
+                                    <BoxView.GestureRecognizers>
+                                        <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                              Command="{Binding BindingContext.UpdateIsExecutedCommand, Source={x:Reference BrowseTasksPage}}"
+                                                              CommandParameter="{Binding .}"/>
+                                    </BoxView.GestureRecognizers>
+                                </BoxView>
+                             </Grid>
                             <Label Grid.Column="1"
                                    Text="{Binding Title}" 
                                    LineBreakMode="NoWrap" 
-                                   Style="{DynamicResource ListItemTextStyle}" 
-                                   TextColor="{StaticResource Primary}"
-                                   FontSize="Large"/>
+                                   Style="{DynamicResource CustomListItemTextStyle}" />
                             <StackLayout Grid.Row="1"
                                          Grid.Column="1"
                                          Orientation="Horizontal">
                                 <Label Text="{StaticResource font-awesome-tag}"
-                                       FontFamily="fontello"
-                                       Style="{DynamicResource ListItemDetailTextStyle}" 
-                                       TextColor="{StaticResource Primary}"
-                                       FontSize="Small"
+                                       Style="{DynamicResource CustomListItemDetailIconStyle}"                                   
                                        VerticalTextAlignment="Center"/>
                                 <Label Text="{Binding CategoryName}" 
                                        LineBreakMode="NoWrap" 
-                                       Style="{DynamicResource ListItemDetailTextStyle}" 
-                                       TextColor="{StaticResource Primary}"
-                                       FontSize="Small"
+                                       Style="{DynamicResource CustomListItemDetailTextStyle}" 
                                        VerticalTextAlignment="Center"/>
                             </StackLayout>    
                             <Grid.GestureRecognizers>
