@@ -1,35 +1,19 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Threading.Tasks;
-using ToDoList.Models;
-using ToDoList.Views;
 using ToDoList.Views.Task;
 using ToDoList.Models.Wrappers.Task;
 using ToDoList.Services.Task;
 using ToDoList.Models.Converters;
 using System.Linq;
 using MvvmHelpers;
-using Android.Webkit;
-using System.ComponentModel;
-using static Android.Resource;
 using System.Collections.Generic;
-using Xamarin.Forms.Internals;
 using MvvmHelpers.Commands;
 using ToDoList.Services.MessageDialog;
 using ToDoList.Services.Navigation;
+using ToDoList.Core;
 
 
-public enum TaskSortMethod
-{
-    ByIdAscending,
-    ByIdDescending,
-    ByTitleAscending,
-    ByTitleDescending,
-    ByTermAscending,
-    ByTermDescending
 
-}
 
 namespace ToDoList.ViewModels.Task
 {
@@ -184,6 +168,7 @@ namespace ToDoList.ViewModels.Task
             Tasks.Clear();
             GetTasksParamsWrapper.PageSize = _pageSize;
             GetTasksParamsWrapper.PageNumber = 1;
+            GetTasksParamsWrapper.SortMethod = _sortMethod;
             var tasksPage = await _taskService.GetTasksAsync(GetTasksParamsWrapper.ToDto());
             if (tasksPage.Tasks.Any())
             {

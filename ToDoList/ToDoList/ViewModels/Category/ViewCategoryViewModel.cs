@@ -1,9 +1,5 @@
 ﻿using MvvmHelpers.Commands;
-using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using ToDoList.Models;
 using ToDoList.Models.Converters;
 using ToDoList.Models.Wrappers.Category;
 using ToDoList.Services.Category;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ToDoList.Models.Wrappers.Category
+﻿namespace ToDoList.Models.Wrappers.Category
 {
     public class ReadCategoryWrapper : WrapperBase
     {

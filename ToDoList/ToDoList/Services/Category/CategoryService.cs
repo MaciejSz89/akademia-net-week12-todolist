@@ -1,17 +1,11 @@
-﻿using Android.Webkit;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using ToDoList.Core.Dtos;
 using ToDoList.Models.Converters;
-using ToDoList.Models.Wrappers.Category;
-using Xamarin.Forms;
 
 namespace ToDoList.Services.Category
 {

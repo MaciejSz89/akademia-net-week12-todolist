@@ -1,5 +1,4 @@
 ﻿using MvvmHelpers;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 using ToDoList.Models.Wrappers.Category;
 

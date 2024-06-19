@@ -1,6 +1,5 @@
 ﻿using MvvmHelpers;
 using MvvmHelpers.Commands;
-using System.Collections.ObjectModel;
 using ToDoList.Models.Wrappers.Task;
 
 namespace ToDoList.ViewModels.Task

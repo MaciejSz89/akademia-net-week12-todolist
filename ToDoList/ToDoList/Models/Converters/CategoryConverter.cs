@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ToDoList.Core.Dtos;
-using ToDoList.Models.Wrappers.Account;
+﻿using ToDoList.Core.Dtos;
 using ToDoList.Models.Wrappers.Category;
 
 namespace ToDoList.Models.Converters

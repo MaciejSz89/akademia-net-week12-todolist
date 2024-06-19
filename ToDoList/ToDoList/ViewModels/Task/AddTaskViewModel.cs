@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Windows.Input;
-using ToDoList.Models;
 using ToDoList.Models.Converters;
 using ToDoList.Models.Wrappers.Category;
 using ToDoList.Models.Wrappers.Task;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using ToDoList.Models.Converters;
+﻿using ToDoList.Models.Converters;
 using ToDoList.Models.Wrappers.Task;
 using ToDoList.Services.Task;
 using Xamarin.Forms;

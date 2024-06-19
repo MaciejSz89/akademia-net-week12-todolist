@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ToDoList.Core;
 
 namespace ToDoList.Models.Wrappers.Task
 {
@@ -11,6 +9,7 @@ namespace ToDoList.Models.Wrappers.Task
         private string _title = null!;
         private int _pageNumber = 1;
         private int _pageSize = 4;
+        private TaskSortMethod _sortMethod;
 
         public bool? IsExecuted
         {
@@ -36,6 +35,12 @@ namespace ToDoList.Models.Wrappers.Task
         {
             get => _pageSize;
             set => SetProperty(ref _pageSize, value);
+        }
+
+        public TaskSortMethod SortMethod
+        {
+            get => _sortMethod;
+            set => SetProperty(ref _sortMethod, value);
         }
     }
 }

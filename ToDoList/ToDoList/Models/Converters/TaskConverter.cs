@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ToDoList.Core.Dtos;
-using ToDoList.Models.Wrappers.Account;
+﻿using ToDoList.Core.Dtos;
 using ToDoList.Models.Wrappers.Task;
 
 namespace ToDoList.Models.Converters
@@ -17,7 +13,8 @@ namespace ToDoList.Models.Converters
                 CategoryId = wrapper.CategoryId,
                 IsExecuted = wrapper.IsExecuted,
                 PageNumber = wrapper.PageNumber,
-                PageSize = wrapper.PageSize
+                PageSize = wrapper.PageSize,
+                SortMethod = wrapper.SortMethod
             };
             return getTasksParamsDto;
         }

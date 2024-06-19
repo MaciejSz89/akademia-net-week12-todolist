@@ -1,12 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using ToDoList.Core.Dtos;
 using ToDoList.Models.Converters;
 using ToDoList.Models.Wrappers.Account;
 using ToDoList.Services.Account;
-using ToDoList.Views;
 using ToDoList.Views.Account;
 using ToDoList.Views.Task;
 using Xamarin.Forms;
