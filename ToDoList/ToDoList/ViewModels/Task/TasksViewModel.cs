@@ -36,10 +36,10 @@ namespace ToDoList.ViewModels.Task
     public class TasksViewModel : ViewModelBase, ITasksViewModel
     {
         private ReadTaskWrapper? _selectedTask;
-        private int _currentPage = 1;
-        private int _lastPage = 1;
+        private int _currentPage = 0;
+        private int _currentPageSize = 0;
         private GetCategoriesParamsWrapper _getTasksParamsWrapper;
-        private const int _pageSize = 9;
+        private const int _pageSize = 12;
         private readonly ITaskService _taskService;
         private readonly IMessageDialogService _messageDialogService;
         private readonly INavigationService _navigationService;
@@ -51,21 +51,16 @@ namespace ToDoList.ViewModels.Task
         {
             Title = "Zadania";
             Tasks = new ObservableRangeCollection<ReadTaskWrapper>();
-            LoadTasksCommand = new Command(async () => await ExecuteLoadTasksCommand());
+            LoadTasksCommand = new Command(async () => await OnLoadTasksCommand());
+            LoadMoreTasksCommand = new Command(async () => await OnLoadMoreTasksCommand());
 
-            _getTasksParamsWrapper = new GetCategoriesParamsWrapper
-            {
-                PageSize = _pageSize,
-                PageNumber = 1,
-            };
+            _getTasksParamsWrapper = new GetCategoriesParamsWrapper();
 
             TaskTapped = new Command<ReadTaskWrapper>(OnTaskSelected);
 
             AddTaskCommand = new Command(OnAddTaskCommand);
             EditTaskCommand = new Command<ReadTaskWrapper>(OnEditTaskCommand);
             DeleteTaskCommand = new Command<ReadTaskWrapper>(async (x) => await OnDeleteTaskCommand(x));
-            PreviousPageCommand = new Command(async (x) => await OnPreviousPageCommand(), ValidatePreviousPage);
-            NextPageCommand = new Command(async (x) => await OnNextPageCommand(), ValidateNextPage);
             UpdateIsExecutedCommand = new Command<ReadTaskWrapper>(async (x) => await OnUpdateIsExecutedCommand(x));
             _taskService = taskService;
             _messageDialogService = messageDialogService;
@@ -74,36 +69,21 @@ namespace ToDoList.ViewModels.Task
         }
 
 
+
         public ObservableRangeCollection<ReadTaskWrapper> Tasks { get; }
         public Command LoadTasksCommand { get; }
+        public Command LoadMoreTasksCommand { get; }
         public Command EditTaskCommand { get; }
 
         public Command AddTaskCommand { get; }
         public Command DeleteTaskCommand { get; }
-        public Command PreviousPageCommand { get; }
-        public Command NextPageCommand { get; }
+
         public Command UpdateIsExecutedCommand { get; }
         public Command<ReadTaskWrapper> TaskTapped { get; }
-        public int CurrentPage
-        {
-            get => _currentPage;
-            set
-            {
-                SetProperty(ref _currentPage, value);
-                GetTasksParamsWrapper.PageNumber = value;
-                PreviousPageCommand.RaiseCanExecuteChanged();
-                NextPageCommand.RaiseCanExecuteChanged();
-            }
-        }
-        public int LastPage
-        {
-            get => _lastPage;
-            set
-            {
-                SetProperty(ref _lastPage, value);
-                NextPageCommand.RaiseCanExecuteChanged();
-            }
-        }
+
+
+
+
         public GetCategoriesParamsWrapper GetTasksParamsWrapper
         {
             get => _getTasksParamsWrapper;
@@ -114,33 +94,6 @@ namespace ToDoList.ViewModels.Task
         }
 
 
-        private bool ValidateNextPage(object arg)
-        {
-            return CurrentPage != LastPage;
-        }
-
-        private bool ValidatePreviousPage(object arg)
-        {
-            return CurrentPage != 1;
-        }
-
-        private async System.Threading.Tasks.Task OnNextPageCommand()
-        {
-
-            IsBusy = true;
-            CurrentPage += 1;
-            await LoadTasks();
-            IsBusy = false;
-        }
-
-        private async System.Threading.Tasks.Task OnPreviousPageCommand()
-        {
-
-            IsBusy = true;
-            CurrentPage -= 1;
-            await LoadTasks();
-            IsBusy = false;
-        }
 
 
 
@@ -172,6 +125,7 @@ namespace ToDoList.ViewModels.Task
 
             try
             {
+                taskWrapper.IsExecuted = !taskWrapper.IsExecuted;
                 if (!taskWrapper.IsExecuted)
                 {
                     await _taskService.FinishTaskAsync(taskWrapper.Id);
@@ -179,20 +133,20 @@ namespace ToDoList.ViewModels.Task
                 else
                 {
                     await _taskService.RestoreTaskAsync(taskWrapper.Id);
-
                 }
-                taskWrapper.IsExecuted = !taskWrapper.IsExecuted;
+               
                 SortTasks();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
+                taskWrapper.IsExecuted = !taskWrapper.IsExecuted;
             }
 
 
         }
 
-        private async System.Threading.Tasks.Task ExecuteLoadTasksCommand()
+        private async System.Threading.Tasks.Task OnLoadTasksCommand()
         {
             IsBusy = true;
 
@@ -209,17 +163,93 @@ namespace ToDoList.ViewModels.Task
                 IsBusy = false;
             }
         }
+        private async System.Threading.Tasks.Task OnLoadMoreTasksCommand()
+        {
+
+            try
+            {
+                await LoadMoreTasks();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+
+        }
+
 
         private async System.Threading.Tasks.Task LoadTasks()
         {
+
             Tasks.Clear();
+            GetTasksParamsWrapper.PageSize = _pageSize;
+            GetTasksParamsWrapper.PageNumber = 1;
+            var tasksPage = await _taskService.GetTasksAsync(GetTasksParamsWrapper.ToDto());
+            if (tasksPage.Tasks.Any())
+            {
+
+                var tasks = tasksPage.Tasks
+                                     .Select(x => x.ToWrapper());
+
+                _currentPage = 1;
+                _currentPageSize = tasks.Count();
+
+                Tasks.ReplaceRange(tasks);
+
+                SortTasks();
+            }
+
+        }
+        private async System.Threading.Tasks.Task LoadMoreTasks()
+        {
+            if (IsBusy || _currentPage == 0)
+                return;
+
+            GetTasksParamsWrapper.PageSize = _pageSize;
+            GetTasksParamsWrapper.PageNumber = _pageSize == _currentPageSize ? _currentPage + 1 : _currentPage;
 
             var tasksPage = await _taskService.GetTasksAsync(GetTasksParamsWrapper.ToDto());
+
+
+            if (!tasksPage.Tasks.Any()
+             || GetTasksParamsWrapper.PageNumber != tasksPage.CurrentPage)
+                return;
+
+
+            var fetchedPageSize = tasksPage.Tasks.Count();
             var tasks = tasksPage.Tasks
                                  .Select(x => x.ToWrapper());
-            Tasks.ReplaceRange(tasks);
-            SortTasks();
+
+            var newTasksForCurrentPage = tasksPage.CurrentPage == _currentPage
+                                      && fetchedPageSize > _currentPageSize;
+
+            var nextPage = tasksPage.CurrentPage == _currentPage + 1;
+
+            if (newTasksForCurrentPage)
+            {
+                tasks = tasks.Skip(_currentPageSize)
+                             .Take(fetchedPageSize - _currentPageSize);
+
+                _currentPageSize += tasks.Count();
+                Tasks.AddRange(tasks);
+                SortTasks();
+                return;
+            }
+
+            if (nextPage)
+            {
+                _currentPageSize = tasks.Count();
+                _currentPage += 1;
+                Tasks.AddRange(tasks);
+                SortTasks();
+                return;
+            }
+
+
         }
+
+
+
 
         public void OnAppearing()
         {
@@ -240,7 +270,7 @@ namespace ToDoList.ViewModels.Task
 
         private async void OnAddTaskCommand(object obj)
         {
-           await _navigationService.GoToPageRelative(nameof(AddTaskPage));
+            await _navigationService.GoToPageRelative(nameof(AddTaskPage));
         }
 
         private async void OnEditTaskCommand(ReadTaskWrapper taskWrapper)

@@ -8,14 +8,11 @@ namespace ToDoList.ViewModels.Task
     public interface ITasksViewModel : IViewModel
     {
         Command AddTaskCommand { get; }
-        int CurrentPage { get; set; }
         Command DeleteTaskCommand { get; }
         GetCategoriesParamsWrapper GetTasksParamsWrapper { get; set; }
-        int LastPage { get; set; }
         Command EditTaskCommand { get; }
         Command LoadTasksCommand { get; }
-        Command NextPageCommand { get; }
-        Command PreviousPageCommand { get; }
+        Command LoadMoreTasksCommand { get; }
         ReadTaskWrapper? SelectedTask { get; set; }
         ObservableRangeCollection<ReadTaskWrapper> Tasks { get; }
         Command<ReadTaskWrapper> TaskTapped { get; }

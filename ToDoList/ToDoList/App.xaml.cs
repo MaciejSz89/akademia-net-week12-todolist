@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using ToDoList.Services;
 using ToDoList.Services.Account;
 using ToDoList.ViewModels.Account;
@@ -20,6 +23,7 @@ namespace ToDoList
 
             MainPage = new AppShell();
 
+
             Startup.Init();
 
 
@@ -39,5 +43,21 @@ namespace ToDoList
         protected override void OnResume()
         {
         }
+
+        //private void SetBackendUrl()
+        //{
+        //    Stream resourceStream = GetType().GetTypeInfo().Assembly.GetManifestResourceStream("ToDoList.appsettings.json");
+
+        //    var configuration = new ConfigurationBuilder()
+        //                            .AddJsonStream(resourceStream)
+        //                            .Build();
+
+        //    var backendEurl = configuration["BackendUrl"];
+
+        //    if (backendEurl != null)
+        //    {
+        //        BackendUrl = backendEurl;
+        //    }
+        //}
     }
 }

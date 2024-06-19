@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -28,12 +29,14 @@ namespace ToDoList
     public static class Startup
     {
         public static IServiceProvider ServiceProvider { get; set; } = null!;
+        public static IConfiguration Configuration { get; set; } = null!;
 
         public static void Init()
         {
             var a = Assembly.GetExecutingAssembly();
             using (var stream = a.GetManifestResourceStream($"{a.GetName().Name}.appsettings.json"))
             {
+
                 var host = new HostBuilder()
                             .ConfigureHostConfiguration(c =>
                             {
@@ -55,9 +58,9 @@ namespace ToDoList
                             }))
                             .Build();
 
+
                 //Save our service provider so we can use it later.
                 ServiceProvider = host.Services;
-
 
             }
 
@@ -66,6 +69,8 @@ namespace ToDoList
 
         public static void ConfigureServices(HostBuilderContext ctx, IServiceCollection services)
         {
+
+
             services.AddTransient<ILoginViewModel, LoginViewModel>()
                     .AddTransient<IRegisterViewModel, RegisterViewModel>()
                     .AddTransient<IAddTaskViewModel, AddTaskViewModel>()
@@ -78,17 +83,17 @@ namespace ToDoList
                     .AddTransient<IViewCategoryViewModel, ViewCategoryViewModel>()
                     .AddTransient<ErrorsHandler>()
                     .AddTransient<GetCachedAccessTokenHandler>()
-                    .AddTransient<IMessageDialogService, MessageDialogService>(provider=>new MessageDialogService(Shell.Current)) 
-                    .AddTransient<INavigationService, NavigationService>(provider=>new NavigationService(Shell.Current)) 
+                    .AddTransient<IMessageDialogService, MessageDialogService>(provider => new MessageDialogService(Shell.Current))
+                    .AddTransient<INavigationService, NavigationService>(provider => new NavigationService(Shell.Current))
                     .AddSingleton<App>();
 
             var httpClientBuilders = new List<IHttpClientBuilder>
             {
                 services.AddHttpClient<IAccountService, AccountService>(ConfigureHttpClient),
-                services.AddHttpClient<ICategoryService, CategoryService>(ConfigureHttpClient)                        
+                services.AddHttpClient<ICategoryService, CategoryService>(ConfigureHttpClient)
                         .AddHttpMessageHandler<GetCachedAccessTokenHandler>()
                         .AddHttpMessageHandler<ErrorsHandler>(),
-                services.AddHttpClient<ITaskService, TaskService>(ConfigureHttpClient)                        
+                services.AddHttpClient<ITaskService, TaskService>(ConfigureHttpClient)
                         .AddHttpMessageHandler<GetCachedAccessTokenHandler>()
                         .AddHttpMessageHandler<ErrorsHandler>(),
             };
@@ -100,7 +105,7 @@ namespace ToDoList
                     {
                         // Get platform dependent HttpMessageHandler
                         var handler = Xamarin.Forms.DependencyService.Get<ICustomHttpMessageHandler>().GetHttpMessageHandler();
-                       
+
                         return handler;
                     });
 
@@ -111,9 +116,16 @@ namespace ToDoList
 
         private static void ConfigureHttpClient(IServiceProvider serviceProvider, HttpClient httpClient)
         {
-            httpClient.BaseAddress = new Uri(App.BackendUrl);
+            var backendUrl = serviceProvider.GetService<IConfiguration>()?
+                                            .GetValue<string?>("BackendUrl");
+
+            if (backendUrl != null)
+                httpClient.BaseAddress = new Uri(App.BackendUrl);
+
             httpClient.Timeout = TimeSpan.FromSeconds(120);
         }
+
+
 
     }
 }

@@ -28,7 +28,9 @@
                  IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
         <CollectionView x:Name="TasksListView"
                 ItemsSource="{Binding Tasks}"
-                SelectionMode="None">
+                SelectionMode="None"
+                RemainingItemsThreshold="1"
+                RemainingItemsThresholdReachedCommand="{Binding LoadMoreTasksCommand}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
