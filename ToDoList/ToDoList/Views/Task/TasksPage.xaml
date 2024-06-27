@@ -12,6 +12,18 @@
         <converters:BoolToStringConverter x:Key="BoolConverter"/>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding SortTasksCommand}" >
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="fontello"
+                     Glyph="{StaticResource font-awesome-sort}"/>
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+        <ToolbarItem Command="{Binding FilterTasksCommand}" >
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="fontello"
+                     Glyph="{StaticResource font-awesome-filter}"/>
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
         <ToolbarItem Command="{Binding AddTaskCommand}" >
             <ToolbarItem.IconImageSource>
                 <FontImageSource FontFamily="fontello"

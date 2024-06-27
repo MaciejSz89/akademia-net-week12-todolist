@@ -91,6 +91,8 @@
             <x:String x:Key="font-awesome-info-circled">&#xE804;</x:String>
             <x:String x:Key="font-awesome-info">&#xF129;</x:String>
             <x:String x:Key="font-awesome-calendar">&#xE805;</x:String>
+            <x:String x:Key="font-awesome-sort">&#xF0DC;</x:String>
+            <x:String x:Key="font-awesome-filter">&#xF0B0;</x:String>
 
         </ResourceDictionary>
     </Application.Resources>

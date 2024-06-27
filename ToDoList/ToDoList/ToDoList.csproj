@@ -9,14 +9,12 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
-    <None Remove="Fonts\fontello.ttf" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Fonts\fontello.ttf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,6 +59,9 @@
     <Compile Update="Views\Task\EditTaskPage.xaml.cs">
       <DependentUpon>EditTaskPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Task\SortTaskPopup.xaml.cs">
+      <DependentUpon>SortTaskPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Task\ViewTaskPage.xaml.cs">
       <DependentUpon>ViewTaskPage.xaml</DependentUpon>
     </Compile>
@@ -70,5 +71,11 @@
     <Compile Update="Views\Task\AddTaskPage.xaml.cs">
       <DependentUpon>AddTaskPage.xaml</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Views\Task\SortTaskPopup.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
