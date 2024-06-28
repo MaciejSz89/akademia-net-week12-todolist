@@ -8,7 +8,7 @@ namespace ToDoList.ViewModels.Task
     {
         Command AddTaskCommand { get; }
         Command DeleteTaskCommand { get; }
-        GetCategoriesParamsWrapper GetTasksParamsWrapper { get; set; }
+        GetTasksParamsWrapper GetTasksParamsWrapper { get; set; }
         Command EditTaskCommand { get; }
         Command LoadTasksCommand { get; }
         Command LoadMoreTasksCommand { get; }
@@ -16,6 +16,7 @@ namespace ToDoList.ViewModels.Task
         ObservableRangeCollection<ReadTaskWrapper> Tasks { get; }
         Command<ReadTaskWrapper> TaskTapped { get; }
         Command UpdateIsExecutedCommand { get; }
+        Command SelectSortMethodCommand { get; }
 
         void OnAppearing();
     }

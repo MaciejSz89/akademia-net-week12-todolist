@@ -6,6 +6,7 @@ namespace ToDoList.Helpers
 {
     public interface IEnumDescriptionProvider<TEnum> where TEnum : struct, Enum
     {
+        IEnumerable<string> GetDescriptions();
         string GetDescription(TEnum? value);
     }
 }

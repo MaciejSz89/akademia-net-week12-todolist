@@ -12,7 +12,7 @@
         <converters:BoolToStringConverter x:Key="BoolConverter"/>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding SortTasksCommand}" >
+        <ToolbarItem Command="{Binding SelectSortMethodCommand}" >
             <ToolbarItem.IconImageSource>
                 <FontImageSource FontFamily="fontello"
                      Glyph="{StaticResource font-awesome-sort}"/>

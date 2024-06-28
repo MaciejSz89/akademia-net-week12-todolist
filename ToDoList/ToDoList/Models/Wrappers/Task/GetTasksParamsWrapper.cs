@@ -2,7 +2,7 @@
 
 namespace ToDoList.Models.Wrappers.Task
 {
-    public class GetCategoriesParamsWrapper : WrapperBase
+    public class GetTasksParamsWrapper : WrapperBase
     {
         private bool? _isExecuted;
         private int? _categoryId;

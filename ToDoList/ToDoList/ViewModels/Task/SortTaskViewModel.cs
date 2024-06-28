@@ -12,14 +12,19 @@ namespace ToDoList.ViewModels.Task
     public class SortTaskViewModel : ViewModelBase, ISortTaskViewModel
     {
         private string _selectedTaskSortMethodDescription;
-        public ObservableCollection<string> TaskSortMethodDescriptions { get; }
         private readonly IEnumDescriptionProvider<TaskSortMethod> _taskSortMethodDescriptionProvider;
+        private readonly ITasksViewModel _tasksViewModel;
         private TaskSortMethod? _selectedTaskSortMethod;
 
-        public SortTaskViewModel(TaskSortMethod? selectedMethod)
+        public SortTaskViewModel(ITasksViewModel tasksViewModel)
         {
+            _tasksViewModel = tasksViewModel;
             _taskSortMethodDescriptionProvider = new TaskSortMethodDescriptionProvider();
+            _selectedTaskSortMethodDescription = _taskSortMethodDescriptionProvider.GetDescription(_tasksViewModel.GetTasksParamsWrapper.SortMethod);
+            TaskSortMethodDescriptions = new ObservableRangeCollection<string>();
+            TaskSortMethodDescriptions.AddRange(_taskSortMethodDescriptionProvider.GetDescriptions());
         }
+        public ObservableRangeCollection<string> TaskSortMethodDescriptions { get; }
 
         public string SelectedTaskSortMethodDescription
         {
@@ -36,8 +41,7 @@ namespace ToDoList.ViewModels.Task
             get => _selectedTaskSortMethod;
             set
             {
-                _selectedTaskSortMethod = value;
-                OnPropertyChanged();
+                SetProperty(ref _selectedTaskSortMethod, value);
             }
         }
 

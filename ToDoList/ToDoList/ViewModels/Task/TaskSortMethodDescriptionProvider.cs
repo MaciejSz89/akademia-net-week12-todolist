@@ -8,20 +8,28 @@ namespace ToDoList.ViewModels.Task
 {
     public class TaskSortMethodDescriptionProvider : IEnumDescriptionProvider<TaskSortMethod>
     {
-        public readonly Dictionary<TaskSortMethod?, string> Descriptions = new Dictionary<TaskSortMethod?, string>
+        private readonly Dictionary<TaskSortMethod?, string> _descriptions = new Dictionary<TaskSortMethod?, string>
         {
-            { null, "===Brak===" },
-            { TaskSortMethod.ByIdAscending, "Według kolejności dodania od najstarszego" },
-            { TaskSortMethod.ByIdDescending, "Według kolejności dodania od najnowszego" },
-            { TaskSortMethod.ByTitleAscending, "Według tytułu alfabetycznie rosnąco" },
-            { TaskSortMethod.ByTitleDescending, "Według tytułu alfabetycznie malejąco" },
-            { TaskSortMethod.ByTermAscending, "Według terminu od najstarszego" },
-            { TaskSortMethod.ByTermDescending, "Według terminu od najnowszego" }
+          
+            { TaskSortMethod.ByIdAscending, "Wg kolejności dodania od najst." },
+            { TaskSortMethod.ByIdDescending, "Wg kolejności dodania od najnow." },
+            { TaskSortMethod.ByTitleAscending, "Wg tytułu alfabetycznie rosnąco" },
+            { TaskSortMethod.ByTitleDescending, "Wg tytułu alfabetycznie malejąco" },
+            { TaskSortMethod.ByTermAscending, "Wg terminu od najstarszego" },
+            { TaskSortMethod.ByTermDescending, "Wg terminu od najnowszego" }
         };
 
-        public string GetDescription(TaskSortMethod? value)
+        public string GetDescription(TaskSortMethod? taskSortMethod)
         {
-            return Descriptions.TryGetValue(value, out var description) ? description : value.ToString();
+            if (taskSortMethod == null)
+                return "===Brak===";
+
+            return _descriptions.TryGetValue(taskSortMethod, out var description) ? description : taskSortMethod.ToString();
+        }
+
+        public IEnumerable<string> GetDescriptions()
+        {
+            return _descriptions.Values;
         }
     }
 }

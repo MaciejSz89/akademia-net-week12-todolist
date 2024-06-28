@@ -5,7 +5,7 @@ namespace ToDoList.Models.Converters
 {
     public static class TaskConverter
     {
-        public static GetTasksParamsDto ToDto(this GetCategoriesParamsWrapper wrapper)
+        public static GetTasksParamsDto ToDto(this GetTasksParamsWrapper wrapper)
         {
             var getTasksParamsDto = new GetTasksParamsDto
             {

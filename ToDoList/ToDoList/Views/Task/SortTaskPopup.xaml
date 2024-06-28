@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xct:Popup xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
              x:Class="ToDoList.Views.Task.SortTaskPopup">
-    <xct:Popup.Content>        
-        <Picker Title="---Wybierz---"
-                ItemsSource="{Binding SortMethods}"
-                SelectedItem="{Binding SelectedMethod}"
-                ItemDisplayBinding="{Binding Value}"/>
-    </xct:Popup.Content>
+    <StackLayout>        
+        <Picker x:Name="picker"
+                Title="---Wybierz---"
+                ItemsSource="{Binding TaskSortMethodDescriptions}"
+                SelectedItem="{Binding SelectedTaskSortMethodDescription}"/>
+    </StackLayout>
 </xct:Popup>

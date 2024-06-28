@@ -11,9 +11,8 @@ using MvvmHelpers.Commands;
 using ToDoList.Services.MessageDialog;
 using ToDoList.Services.Navigation;
 using ToDoList.Core;
-
-
-
+using Xamarin.CommunityToolkit.Extensions;
+using Xamarin.CommunityToolkit.UI.Views;
 
 namespace ToDoList.ViewModels.Task
 {
@@ -22,7 +21,7 @@ namespace ToDoList.ViewModels.Task
         private ReadTaskWrapper? _selectedTask;
         private int _currentPage = 0;
         private int _currentPageSize = 0;
-        private GetCategoriesParamsWrapper _getTasksParamsWrapper;
+        private GetTasksParamsWrapper _getTasksParamsWrapper;
         private const int _pageSize = 12;
         private readonly ITaskService _taskService;
         private readonly IMessageDialogService _messageDialogService;
@@ -38,7 +37,7 @@ namespace ToDoList.ViewModels.Task
             LoadTasksCommand = new Command(async () => await OnLoadTasksCommand());
             LoadMoreTasksCommand = new Command(async () => await OnLoadMoreTasksCommand());
 
-            _getTasksParamsWrapper = new GetCategoriesParamsWrapper();
+            _getTasksParamsWrapper = new GetTasksParamsWrapper();
 
             TaskTapped = new Command<ReadTaskWrapper>(OnTaskSelected);
 
@@ -46,6 +45,7 @@ namespace ToDoList.ViewModels.Task
             EditTaskCommand = new Command<ReadTaskWrapper>(OnEditTaskCommand);
             DeleteTaskCommand = new Command<ReadTaskWrapper>(async (x) => await OnDeleteTaskCommand(x));
             UpdateIsExecutedCommand = new Command<ReadTaskWrapper>(async (x) => await OnUpdateIsExecutedCommand(x));
+            SelectSortMethodCommand = new Command<GetTasksParamsWrapper>(async (x) => await OnSelectSortMethodCommand(x));
             _taskService = taskService;
             _messageDialogService = messageDialogService;
             _navigationService = navigationService;
@@ -58,17 +58,17 @@ namespace ToDoList.ViewModels.Task
         public Command LoadTasksCommand { get; }
         public Command LoadMoreTasksCommand { get; }
         public Command EditTaskCommand { get; }
-
         public Command AddTaskCommand { get; }
         public Command DeleteTaskCommand { get; }
 
         public Command UpdateIsExecutedCommand { get; }
+        public Command SelectSortMethodCommand { get; }
         public Command<ReadTaskWrapper> TaskTapped { get; }
 
 
 
 
-        public GetCategoriesParamsWrapper GetTasksParamsWrapper
+        public GetTasksParamsWrapper GetTasksParamsWrapper
         {
             get => _getTasksParamsWrapper;
             set
@@ -160,7 +160,12 @@ namespace ToDoList.ViewModels.Task
             }
 
         }
-
+        private async System.Threading.Tasks.Task OnSelectSortMethodCommand(GetTasksParamsWrapper param)
+        {
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+            var result = await App.Current.MainPage.ShowPopupAsync(new SortTaskPopup());
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+        }
 
         private async System.Threading.Tasks.Task LoadTasks()
         {
