@@ -16,7 +16,9 @@ namespace ToDoList.ViewModels.Task
             { TaskSortMethod.ByTitleAscending, "Wg tytułu alfabetycznie rosnąco" },
             { TaskSortMethod.ByTitleDescending, "Wg tytułu alfabetycznie malejąco" },
             { TaskSortMethod.ByTermAscending, "Wg terminu od najstarszego" },
-            { TaskSortMethod.ByTermDescending, "Wg terminu od najnowszego" }
+            { TaskSortMethod.ByTermDescending, "Wg terminu od najnowszego" },
+            { TaskSortMethod.ByCategoryAscending, "Wg kategorii alfabetycznie rosnąco" },
+            { TaskSortMethod.ByCategoryDescending, "Wg kategorii alfabetycznie malejąco" }
         };
 
         public string GetDescription(TaskSortMethod? taskSortMethod)

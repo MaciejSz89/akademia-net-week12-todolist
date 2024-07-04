@@ -10,7 +10,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
+using ToDoList.Core;
 using ToDoList.DelegatingHandlers;
+using ToDoList.Helpers;
 using ToDoList.Services;
 using ToDoList.Services.Account;
 using ToDoList.Services.Category;
@@ -76,6 +78,7 @@ namespace ToDoList
                     .AddScoped<IAddTaskViewModel, AddTaskViewModel>()
                     .AddScoped<IEditTaskViewModel, EditTaskViewModel>()
                     .AddScoped<ISortTaskViewModel, SortTaskViewModel>()
+                    .AddScoped<IEnumDescriptionProvider<TaskSortMethod>, TaskSortMethodDescriptionProvider>()
                     .AddScoped<ITasksViewModel, TasksViewModel>()
                     .AddScoped<IViewTaskViewModel, ViewTaskViewModel>()
                     .AddScoped<IAddCategoryViewModel, AddCategoryViewModel>()

@@ -10,7 +10,7 @@
                FontSize="Medium"/>
         <Picker x:Name="picker"
                 Title="---Wybierz---"
-                ItemsSource="{Binding TaskSortMethodDescriptions}"
-                SelectedItem="{Binding SelectedTaskSortMethodDescription}"/>
+                ItemsSource="{Binding TaskSortMethods}"
+                SelectedItem="{Binding GetTasksParamsWrapper.SortMethod}"/>
     </StackLayout>
 </xct:Popup>

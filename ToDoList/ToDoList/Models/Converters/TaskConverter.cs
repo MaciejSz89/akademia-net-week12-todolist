@@ -1,5 +1,8 @@
-﻿using ToDoList.Core.Dtos;
+﻿using ToDoList.Core;
+using ToDoList.Core.Dtos;
+using ToDoList.Helpers;
 using ToDoList.Models.Wrappers.Task;
+using ToDoList.ViewModels.Task;
 
 namespace ToDoList.Models.Converters
 {
@@ -7,6 +10,8 @@ namespace ToDoList.Models.Converters
     {
         public static GetTasksParamsDto ToDto(this GetTasksParamsWrapper wrapper)
         {
+            var taskSortMethodDescriptionProvider = new TaskSortMethodDescriptionProvider();
+            var sortMethod = EnumHelper.GetEnumFromDescription<TaskSortMethod>(wrapper.SortMethod, taskSortMethodDescriptionProvider) ?? TaskSortMethod.ByTitleAscending;
             var getTasksParamsDto = new GetTasksParamsDto
             {
                 Title = wrapper.Title,
@@ -14,7 +19,7 @@ namespace ToDoList.Models.Converters
                 IsExecuted = wrapper.IsExecuted,
                 PageNumber = wrapper.PageNumber,
                 PageSize = wrapper.PageSize,
-                SortMethod = wrapper.SortMethod
+                SortMethod = sortMethod
             };
             return getTasksParamsDto;
         }

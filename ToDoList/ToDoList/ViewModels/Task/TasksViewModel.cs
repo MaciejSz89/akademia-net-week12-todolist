@@ -13,6 +13,8 @@ using ToDoList.Services.Navigation;
 using ToDoList.Core;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.CommunityToolkit.UI.Views;
+using ToDoList.Helpers;
+using System.ComponentModel;
 
 namespace ToDoList.ViewModels.Task
 {
@@ -27,10 +29,12 @@ namespace ToDoList.ViewModels.Task
         private readonly IMessageDialogService _messageDialogService;
         private readonly INavigationService _navigationService;
         private TaskSortMethod _sortMethod;
+        private IEnumDescriptionProvider<TaskSortMethod> _taskSortMethodDescriptionProvider;
 
         public TasksViewModel(ITaskService taskService,
                               IMessageDialogService messageDialogService,
-                              INavigationService navigationService)
+                              INavigationService navigationService,
+                              IEnumDescriptionProvider<TaskSortMethod> taskSortMethodDescriptionProvider)
         {
             Title = "Zadania";
             Tasks = new ObservableRangeCollection<ReadTaskWrapper>();
@@ -50,9 +54,19 @@ namespace ToDoList.ViewModels.Task
             _messageDialogService = messageDialogService;
             _navigationService = navigationService;
             _sortMethod = TaskSortMethod.ByTitleAscending;
+            _taskSortMethodDescriptionProvider = taskSortMethodDescriptionProvider;
+            GetTasksParamsWrapper.PropertyChanged += GetTasksParamsWrapper_PropertyChanged;
         }
 
+        private void GetTasksParamsWrapper_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            string[] propertiesToCheck = { nameof(GetTasksParamsWrapper.PageNumber), nameof(GetTasksParamsWrapper.PageSize) };
 
+            if (propertiesToCheck.Contains(e.PropertyName))
+                return;
+
+            IsBusy = true;
+        }
 
         public ObservableRangeCollection<ReadTaskWrapper> Tasks { get; }
         public Command LoadTasksCommand { get; }
@@ -118,7 +132,7 @@ namespace ToDoList.ViewModels.Task
                 {
                     await _taskService.RestoreTaskAsync(taskWrapper.Id);
                 }
-               
+
                 SortTasks();
             }
             catch (Exception ex)
@@ -162,9 +176,9 @@ namespace ToDoList.ViewModels.Task
         }
         private async System.Threading.Tasks.Task OnSelectSortMethodCommand(GetTasksParamsWrapper param)
         {
-#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+#pragma warning disable CS8620 
             var result = await App.Current.MainPage.ShowPopupAsync(new SortTaskPopup());
-#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+#pragma warning restore CS8620 
         }
 
         private async System.Threading.Tasks.Task LoadTasks()
@@ -280,9 +294,9 @@ namespace ToDoList.ViewModels.Task
         {
 
             var tasks = new List<ReadTaskWrapper>(Tasks);
+            var selectedTaskSortMethod = EnumHelper.GetEnumFromDescription<TaskSortMethod>(GetTasksParamsWrapper.SortMethod, _taskSortMethodDescriptionProvider);
 
-
-            switch (GetTasksParamsWrapper.SortMethod)
+            switch (selectedTaskSortMethod)
             {
                 case TaskSortMethod.ByIdAscending:
                     tasks = Tasks.OrderBy(x => x.IsExecuted)
@@ -312,6 +326,16 @@ namespace ToDoList.ViewModels.Task
                 case TaskSortMethod.ByTermDescending:
                     tasks = Tasks.OrderBy(x => x.IsExecuted)
                                  .ThenByDescending(x => x.Term)
+                                 .ToList();
+                    break;
+                case TaskSortMethod.ByCategoryAscending:
+                    tasks = Tasks.OrderBy(x => x.IsExecuted)
+                                 .ThenBy(x => x.CategoryName)
+                                 .ToList();
+                    break;
+                case TaskSortMethod.ByCategoryDescending:
+                    tasks = Tasks.OrderBy(x => x.IsExecuted)
+                                 .ThenByDescending(x => x.CategoryName)
                                  .ToList();
                     break;
                 default:

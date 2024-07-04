@@ -1,4 +1,6 @@
 ﻿using ToDoList.Core;
+using ToDoList.Helpers;
+using ToDoList.ViewModels.Task;
 
 namespace ToDoList.Models.Wrappers.Task
 {
@@ -9,7 +11,13 @@ namespace ToDoList.Models.Wrappers.Task
         private string _title = null!;
         private int _pageNumber = 1;
         private int _pageSize = 4;
-        private TaskSortMethod _sortMethod;
+        private string _sortMethod;
+
+        public GetTasksParamsWrapper()
+        {
+            var taskSortMethodDescriptionProvider = new TaskSortMethodDescriptionProvider();
+            _sortMethod = taskSortMethodDescriptionProvider.GetDescription(TaskSortMethod.ByTitleAscending);
+        }
 
         public bool? IsExecuted
         {
@@ -37,7 +45,7 @@ namespace ToDoList.Models.Wrappers.Task
             set => SetProperty(ref _pageSize, value);
         }
 
-        public TaskSortMethod SortMethod
+        public string SortMethod
         {
             get => _sortMethod;
             set => SetProperty(ref _sortMethod, value);
