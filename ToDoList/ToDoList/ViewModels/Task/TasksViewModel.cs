@@ -173,7 +173,6 @@ namespace ToDoList.ViewModels.Task
             Tasks.Clear();
             GetTasksParamsWrapper.PageSize = _pageSize;
             GetTasksParamsWrapper.PageNumber = 1;
-            GetTasksParamsWrapper.SortMethod = _sortMethod;
             var tasksPage = await _taskService.GetTasksAsync(GetTasksParamsWrapper.ToDto());
             if (tasksPage.Tasks.Any())
             {
@@ -283,7 +282,7 @@ namespace ToDoList.ViewModels.Task
             var tasks = new List<ReadTaskWrapper>(Tasks);
 
 
-            switch (_sortMethod)
+            switch (GetTasksParamsWrapper.SortMethod)
             {
                 case TaskSortMethod.ByIdAscending:
                     tasks = Tasks.OrderBy(x => x.IsExecuted)

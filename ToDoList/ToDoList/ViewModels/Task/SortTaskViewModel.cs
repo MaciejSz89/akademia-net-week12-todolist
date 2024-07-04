@@ -32,7 +32,15 @@ namespace ToDoList.ViewModels.Task
             set
             {
                 SetProperty(ref _selectedTaskSortMethodDescription, value);
+                var previouslySelectedTaskSortMethod = _selectedTaskSortMethod;
                 SelectedTaskSortMethod = EnumHelper.GetEnumFromDescription<TaskSortMethod>(_selectedTaskSortMethodDescription, _taskSortMethodDescriptionProvider);
+                
+                if (_selectedTaskSortMethod != null && previouslySelectedTaskSortMethod != _selectedTaskSortMethod)
+                {
+                    _tasksViewModel.GetTasksParamsWrapper.SortMethod = (TaskSortMethod)_selectedTaskSortMethod;
+                    _tasksViewModel.IsBusy = true;
+                }
+              
             }
         }
 
