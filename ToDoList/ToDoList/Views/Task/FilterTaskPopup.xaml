@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xct:Popup xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
+             xmlns:converters="clr-namespace:ToDoList.Helpers.Converters"
+             xmlns:local="clr-namespace:ToDoList.ViewModels.Task"
+             xmlns:categoryWrappers="clr-namespace:ToDoList.Models.Wrappers.Category"
+             x:Class="ToDoList.Views.Task.FilterTaskPopup"
+             Size="340,600">
+    <xct:Popup.Resources>
+        <ResourceDictionary>
+            <converters:ItemToIdConverter x:TypeArguments="categoryWrappers:ReadCategoryWrapper" x:Key="CategoryIdConverter" />
+            <converters:NullableItemConverter x:TypeArguments="categoryWrappers:ReadCategoryWrapper" x:Key="NullableCategoryConverter" />
+            <x:String x:Key="PropertyName">Name</x:String>
+            <x:String x:Key="NullValue">---Brak---</x:String>
+        </ResourceDictionary>
+    </xct:Popup.Resources>
+
+
+    <StackLayout Orientation="Vertical">
+        <!--<Label Text="Status:"
+               TextColor="Black"
+               FontSize="Medium"/>
+            <Picker Title="===Wybierz==="
+                ItemsSource="{Binding IsExecutedFilters}"
+                SelectedItem="{Binding GetTasksParamsWrapper.IsExecutedFilter}"/>-->
+
+        <Label Text="Tytuł:"
+               TextColor="Black"
+               FontSize="Medium"/>
+        <Entry Text="{Binding GetTasksParamsWrapper.Title}"/>
+
+        <Label Text="Kategoria:"
+               TextColor="Black"
+               FontSize="Medium"/>
+        <Picker x:Name="categoryPicker"              
+                ItemsSource="{Binding Categories}"
+                SelectedItem="{Binding SelectedCategoryFilter, Mode=TwoWay}">
+            <Picker.ItemDisplayBinding>
+                <Binding Path="."
+                         Converter="{StaticResource NullableCategoryConverter}">
+                    <Binding.ConverterParameter>
+                        <x:Array Type="{x:Type x:Object}">
+                            <x:String>Name</x:String>
+                            <x:String>---Brak---</x:String>
+                        </x:Array>
+                    </Binding.ConverterParameter>
+                </Binding>
+            </Picker.ItemDisplayBinding>
+            <Picker.Title>
+                <Binding Path="SelectedCategoryFilter"
+                         Converter="{StaticResource NullableCategoryConverter}">
+                    <Binding.ConverterParameter>
+                        <x:Array Type="{x:Type x:Object}">
+                            <x:String>Name</x:String>
+                            <x:String>---Brak---</x:String>
+                        </x:Array>
+                    </Binding.ConverterParameter>
+                </Binding>
+            </Picker.Title>
+        </Picker>
+    </StackLayout>
+</xct:Popup>
+
+<!--Title="{Binding Source=SelectedCategoryFilter, Converter={StaticResource NullableCategoryConverter}, ConverterParameter='==Brak=='}"-->

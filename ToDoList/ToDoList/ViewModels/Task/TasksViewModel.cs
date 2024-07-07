@@ -50,6 +50,7 @@ namespace ToDoList.ViewModels.Task
             DeleteTaskCommand = new Command<ReadTaskWrapper>(async (x) => await OnDeleteTaskCommand(x));
             UpdateIsExecutedCommand = new Command<ReadTaskWrapper>(async (x) => await OnUpdateIsExecutedCommand(x));
             SelectSortMethodCommand = new Command<GetTasksParamsWrapper>(async (x) => await OnSelectSortMethodCommand(x));
+            SelectFiltersCommand = new Command<GetTasksParamsWrapper>(async (x) => await OnSelectFiltersCommand(x));
             _taskService = taskService;
             _messageDialogService = messageDialogService;
             _navigationService = navigationService;
@@ -57,6 +58,8 @@ namespace ToDoList.ViewModels.Task
             _taskSortMethodDescriptionProvider = taskSortMethodDescriptionProvider;
             GetTasksParamsWrapper.PropertyChanged += GetTasksParamsWrapper_PropertyChanged;
         }
+
+
 
         private void GetTasksParamsWrapper_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -77,6 +80,7 @@ namespace ToDoList.ViewModels.Task
 
         public Command UpdateIsExecutedCommand { get; }
         public Command SelectSortMethodCommand { get; }
+        public Command SelectFiltersCommand { get; }
         public Command<ReadTaskWrapper> TaskTapped { get; }
 
 
@@ -178,6 +182,13 @@ namespace ToDoList.ViewModels.Task
         {
 #pragma warning disable CS8620 
             var result = await App.Current.MainPage.ShowPopupAsync(new SortTaskPopup());
+#pragma warning restore CS8620 
+        }
+
+        private async System.Threading.Tasks.Task OnSelectFiltersCommand(GetTasksParamsWrapper param)
+        {
+#pragma warning disable CS8620 
+            var result = await App.Current.MainPage.ShowPopupAsync(new FilterTaskPopup());
 #pragma warning restore CS8620 
         }
 

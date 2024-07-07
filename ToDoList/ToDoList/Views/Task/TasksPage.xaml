@@ -18,7 +18,7 @@
                      Glyph="{StaticResource font-awesome-sort}"/>
             </ToolbarItem.IconImageSource>
         </ToolbarItem>
-        <ToolbarItem Command="{Binding FilterTasksCommand}" >
+        <ToolbarItem Command="{Binding SelectFiltersCommand}" >
             <ToolbarItem.IconImageSource>
                 <FontImageSource FontFamily="fontello"
                      Glyph="{StaticResource font-awesome-filter}"/>

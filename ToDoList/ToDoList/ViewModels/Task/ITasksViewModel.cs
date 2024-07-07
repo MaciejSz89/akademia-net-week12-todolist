@@ -17,7 +17,7 @@ namespace ToDoList.ViewModels.Task
         Command<ReadTaskWrapper> TaskTapped { get; }
         Command UpdateIsExecutedCommand { get; }
         Command SelectSortMethodCommand { get; }
-
+        Command SelectFiltersCommand { get; }        
         void OnAppearing();
     }
 }

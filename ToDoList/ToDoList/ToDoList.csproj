@@ -63,6 +63,10 @@
     <Compile Update="Views\Task\EditTaskPage.xaml.cs">
       <DependentUpon>EditTaskPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Task\FilterTaskPopup.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>FilterTaskPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Task\SortTaskPopup.xaml.cs">
       <DependentUpon>SortTaskPopup.xaml</DependentUpon>
     </Compile>
@@ -78,6 +82,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Views\Task\FilterTaskPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\Task\SortTaskPopup.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

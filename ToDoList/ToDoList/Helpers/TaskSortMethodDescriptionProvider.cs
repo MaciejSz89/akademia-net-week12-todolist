@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using ToDoList.Core;
-using ToDoList.Helpers;
 
-namespace ToDoList.ViewModels.Task
+namespace ToDoList.Helpers
 {
     public class TaskSortMethodDescriptionProvider : IEnumDescriptionProvider<TaskSortMethod>
     {
         private readonly Dictionary<TaskSortMethod?, string> _descriptions = new Dictionary<TaskSortMethod?, string>
         {
-          
+
             { TaskSortMethod.ByIdAscending, "Wg kolejności dodania od najst." },
             { TaskSortMethod.ByIdDescending, "Wg kolejności dodania od najnow." },
             { TaskSortMethod.ByTitleAscending, "Wg tytułu alfabetycznie rosnąco" },
