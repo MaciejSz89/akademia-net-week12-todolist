@@ -17,5 +17,7 @@ namespace ToDoList.ViewModels.Task
         GetTasksParamsWrapper GetTasksParamsWrapper { get; }
         ReadCategoryWrapper? SelectedCategoryFilter { get; set; }
         Command LoadFiltersCommand { get; }
+        ObservableRangeCollection<KeyValuePair<string, bool?>> IsExecutedFilters { get; }
+        KeyValuePair<string, bool?> SelectedIsExecutedFilter { get; set; }
     }
 }

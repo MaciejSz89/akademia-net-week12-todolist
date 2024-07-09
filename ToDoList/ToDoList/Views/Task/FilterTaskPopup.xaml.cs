@@ -21,5 +21,9 @@ namespace ToDoList.Views.Task
             BindingContext = Startup.ServiceProvider.GetService<IFilterTaskViewModel>();
         }
 
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+            Dismiss(null);
+        }
     }
 }

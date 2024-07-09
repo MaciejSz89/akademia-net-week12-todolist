@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:ToDoList.ViewModels.Task"
              xmlns:categoryWrappers="clr-namespace:ToDoList.Models.Wrappers.Category"
              x:Class="ToDoList.Views.Task.FilterTaskPopup"
-             Size="340,600">
+             Size="340,300">
     <xct:Popup.Resources>
         <ResourceDictionary>
             <converters:ItemToIdConverter x:TypeArguments="categoryWrappers:ReadCategoryWrapper" x:Key="CategoryIdConverter" />
@@ -18,12 +18,14 @@
 
 
     <StackLayout Orientation="Vertical">
-        <!--<Label Text="Status:"
+        <Label Text="Status:"
                TextColor="Black"
                FontSize="Medium"/>
-            <Picker Title="===Wybierz==="
+        <Picker Title="{Binding SelectedIsExecutedFilter.Key}"
                 ItemsSource="{Binding IsExecutedFilters}"
-                SelectedItem="{Binding GetTasksParamsWrapper.IsExecutedFilter}"/>-->
+                ItemDisplayBinding="{Binding Key}"
+                SelectedItem="{Binding SelectedIsExecutedFilter}"/>
+
 
         <Label Text="Tytuł:"
                TextColor="Black"
@@ -33,8 +35,7 @@
         <Label Text="Kategoria:"
                TextColor="Black"
                FontSize="Medium"/>
-        <Picker x:Name="categoryPicker"              
-                ItemsSource="{Binding Categories}"
+        <Picker ItemsSource="{Binding Categories}"
                 SelectedItem="{Binding SelectedCategoryFilter, Mode=TwoWay}">
             <Picker.ItemDisplayBinding>
                 <Binding Path="."
@@ -59,6 +60,9 @@
                 </Binding>
             </Picker.Title>
         </Picker>
+
+        <Button Text="OK"
+                Clicked="Button_Clicked"/>
     </StackLayout>
 </xct:Popup>
 

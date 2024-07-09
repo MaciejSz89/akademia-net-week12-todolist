@@ -25,6 +25,9 @@ namespace ToDoList.ViewModels.Task
         private readonly ITasksViewModel _tasksViewModel;
         private readonly ICategoryService _categoryService;
         private ReadCategoryWrapper? _selectedCategoryFilter;
+        private KeyValuePair<string, bool?> _selectedIsExecutedFilter;
+        private bool _selectedIsExecutedFilterInitialized;
+        private bool _selectedCategoryFilterInitialized;
 
         public FilterTaskViewModel(ITasksViewModel tasksViewModel,
                                    ICategoryService categoryService)
@@ -32,34 +35,39 @@ namespace ToDoList.ViewModels.Task
             _tasksViewModel = tasksViewModel;
             _categoryService = categoryService;
             Categories = new ObservableRangeCollection<ReadCategoryWrapper?>();
+            IsExecutedFilters = new ObservableRangeCollection<KeyValuePair<string, bool?>>();
             LoadFiltersCommand = new Command(async () => await OnLoadFiltersCommand());
             IsBusy = true;
-            Xamarin.Forms.Device.BeginInvokeOnMainThread(async() => await OnLoadFiltersCommand());
+            Xamarin.Forms.Device.BeginInvokeOnMainThread(async () => await OnLoadFiltersCommand());
             PropertyChanged += OnPropertyChanged;
 
         }
 
         private async System.Threading.Tasks.Task OnLoadFiltersCommand()
         {
-            IsBusy = true;
 
             try
             {
+                IsExecutedFilters.AddRange(new List<KeyValuePair<string, bool?>>{
+                        new KeyValuePair<string, bool?>("---Brak---", null),
+                        new KeyValuePair<string, bool?>("Tylko nieukończone", false),
+                        new KeyValuePair<string, bool?>("Tylko ukończone", true)
+                    });
+
+                SelectedIsExecutedFilter = IsExecutedFilters.FirstOrDefault(x => x.Value == _tasksViewModel.GetTasksParamsWrapper.IsExecuted);
+                _selectedIsExecutedFilterInitialized = true;
+                OnPropertyChanged(nameof(SelectedIsExecutedFilter));
                 await GetCategoriesAsync();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
             }
-            finally
-            {
-                IsBusy = false;
-            }
         }
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(SelectedCategoryFilter)) 
+            if (e.PropertyName == nameof(SelectedCategoryFilter))
             {
                 Debug.WriteLine($"SelectedCategoryFilter changed to {SelectedCategoryFilter?.Name}");
             }
@@ -71,7 +79,6 @@ namespace ToDoList.ViewModels.Task
 
         private async System.Threading.Tasks.Task GetCategoriesAsync()
         {
-            IsBusy = true;
             var categoryDtos = await _categoryService.GetCategoriesAsync();
 
             Categories.Add(null);
@@ -80,8 +87,8 @@ namespace ToDoList.ViewModels.Task
 
             SelectedCategoryFilter = null;
             SelectedCategoryFilter = newSelectedCategoryFilter;
+            _selectedCategoryFilterInitialized = true;
             OnPropertyChanged(nameof(SelectedCategoryFilter));
-            IsBusy = false;
 
         }
 
@@ -91,10 +98,26 @@ namespace ToDoList.ViewModels.Task
             set
             {
                 SetProperty(ref _selectedCategoryFilter, value);
+                if (!_selectedCategoryFilterInitialized)
+                    return;
                 GetTasksParamsWrapper.CategoryId = value?.Id;
             }
         }
 
         public Command LoadFiltersCommand { get; }
+
+        public ObservableRangeCollection<KeyValuePair<string, bool?>> IsExecutedFilters { get; }
+
+        public KeyValuePair<string, bool?> SelectedIsExecutedFilter
+        {
+            get => _selectedIsExecutedFilter;
+            set
+            {     
+                SetProperty(ref _selectedIsExecutedFilter, value);
+                if (!_selectedIsExecutedFilterInitialized)
+                    return;
+                _tasksViewModel.GetTasksParamsWrapper.IsExecuted = value.Value;
+            }
+        }
     }
 }
