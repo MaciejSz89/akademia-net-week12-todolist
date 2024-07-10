@@ -1,8 +1,13 @@
-﻿using System;
+﻿using MvvmHelpers.Commands;
+using System;
 using System.Diagnostics;
+using System.Windows.Input;
 using ToDoList.Models.Converters;
 using ToDoList.Models.Wrappers.Task;
 using ToDoList.Services.Task;
+using ToDoList.ViewModels.Category;
+using ToDoList.Views.Category;
+using ToDoList.Views.Task;
 using Xamarin.Forms;
 
 namespace ToDoList.ViewModels.Task
@@ -19,8 +24,9 @@ namespace ToDoList.ViewModels.Task
         public ViewTaskViewModel(ITaskService taskService)
         {
             _taskService = taskService;
-            UpdateIsExecutedCommand = new MvvmHelpers.Commands.Command<ReadTaskWrapper>(async (x) => await OnUpdateIsExecutedCommand(x));
-            
+            UpdateIsExecutedCommand = new AsyncCommand<ReadTaskWrapper>(OnUpdateIsExecuted);
+            EditCommand = new AsyncCommand(OnEdit);
+
         }
 
         public int Id
@@ -45,7 +51,8 @@ namespace ToDoList.ViewModels.Task
             }
         }
 
-        public MvvmHelpers.Commands.Command UpdateIsExecutedCommand { get; }
+        public ICommand UpdateIsExecutedCommand { get; }
+        public ICommand EditCommand { get; }
 
         public async void LoadTask(int id)
         {
@@ -53,7 +60,7 @@ namespace ToDoList.ViewModels.Task
             Task = taskDto.ToWrapper();
         }
 
-        private async System.Threading.Tasks.Task OnUpdateIsExecutedCommand(ReadTaskWrapper taskWrapper)
+        private async System.Threading.Tasks.Task OnUpdateIsExecuted(ReadTaskWrapper taskWrapper)
         {
 
             if (taskWrapper == null || IsBusy)
@@ -79,8 +86,13 @@ namespace ToDoList.ViewModels.Task
             {
                 Debug.WriteLine(ex);
             }
-
-
         }
+        private async System.Threading.Tasks.Task OnEdit()
+        {
+            var route = $"/{nameof(EditTaskPage)}?{nameof(EditTaskViewModel.Id)}={Id}";
+            await Xamarin.Forms.Shell.Current.GoToAsync(route);
+        }
+
     }
 }
+

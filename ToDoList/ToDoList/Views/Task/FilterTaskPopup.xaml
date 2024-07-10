@@ -61,8 +61,17 @@
             </Picker.Title>
         </Picker>
 
-        <Button Text="OK"
-                Clicked="Button_Clicked"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Text="Wyczyść"
+                    Command="{Binding ClearFiltersCommand}"/>
+            <Button Grid.Column="1"
+                    Text="OK"
+                    Clicked="Button_Clicked"/>
+        </Grid>
     </StackLayout>
 </xct:Popup>
 

@@ -10,8 +10,6 @@
     <StackLayout Spacing="20" Padding="15">
         <Label Text="Nazwa:" FontSize="Medium" />
         <Label Text="{Binding Category.Name}" FontSize="Small"/>
-        <StackLayout Orientation="Horizontal">
-            <Button Text="Edytuj" Command="{Binding EditCommand}" HorizontalOptions="FillAndExpand"></Button>
-        </StackLayout>
+        <Button Text="Edytuj" Command="{Binding EditCommand}"/>
     </StackLayout>
 </ContentPage>

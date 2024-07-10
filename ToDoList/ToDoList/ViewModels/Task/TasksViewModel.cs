@@ -15,6 +15,7 @@ using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.CommunityToolkit.UI.Views;
 using ToDoList.Helpers;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace ToDoList.ViewModels.Task
 {
@@ -38,19 +39,19 @@ namespace ToDoList.ViewModels.Task
         {
             Title = "Zadania";
             Tasks = new ObservableRangeCollection<ReadTaskWrapper>();
-            LoadTasksCommand = new Command(async () => await OnLoadTasksCommand());
-            LoadMoreTasksCommand = new Command(async () => await OnLoadMoreTasksCommand());
+            LoadTasksCommand = new AsyncCommand(OnLoadTasks);
+            LoadMoreTasksCommand = new AsyncCommand(OnLoadMoreTasks);
 
             _getTasksParamsWrapper = new GetTasksParamsWrapper();
 
             TaskTapped = new Command<ReadTaskWrapper>(OnTaskSelected);
 
-            AddTaskCommand = new Command(OnAddTaskCommand);
-            EditTaskCommand = new Command<ReadTaskWrapper>(OnEditTaskCommand);
-            DeleteTaskCommand = new Command<ReadTaskWrapper>(async (x) => await OnDeleteTaskCommand(x));
-            UpdateIsExecutedCommand = new Command<ReadTaskWrapper>(async (x) => await OnUpdateIsExecutedCommand(x));
-            SelectSortMethodCommand = new Command<GetTasksParamsWrapper>(async (x) => await OnSelectSortMethodCommand(x));
-            SelectFiltersCommand = new Command<GetTasksParamsWrapper>(async (x) => await OnSelectFiltersCommand(x));
+            AddTaskCommand = new AsyncCommand(OnAddTask);
+            EditTaskCommand = new AsyncCommand<ReadTaskWrapper>(OnEditTask);
+            DeleteTaskCommand = new AsyncCommand<ReadTaskWrapper>(OnDeleteTask);
+            UpdateIsExecutedCommand = new AsyncCommand<ReadTaskWrapper>(OnUpdateIsExecuted);
+            SelectSortMethodCommand = new AsyncCommand<GetTasksParamsWrapper>(OnSelectSortMethod);
+            SelectFiltersCommand = new AsyncCommand<GetTasksParamsWrapper>(OnSelectFilters);
             _taskService = taskService;
             _messageDialogService = messageDialogService;
             _navigationService = navigationService;
@@ -72,16 +73,16 @@ namespace ToDoList.ViewModels.Task
         }
 
         public ObservableRangeCollection<ReadTaskWrapper> Tasks { get; }
-        public Command LoadTasksCommand { get; }
-        public Command LoadMoreTasksCommand { get; }
-        public Command EditTaskCommand { get; }
-        public Command AddTaskCommand { get; }
-        public Command DeleteTaskCommand { get; }
+        public ICommand LoadTasksCommand { get; }
+        public ICommand LoadMoreTasksCommand { get; }
+        public ICommand EditTaskCommand { get; }
+        public ICommand AddTaskCommand { get; }
+        public ICommand DeleteTaskCommand { get; }
 
-        public Command UpdateIsExecutedCommand { get; }
-        public Command SelectSortMethodCommand { get; }
-        public Command SelectFiltersCommand { get; }
-        public Command<ReadTaskWrapper> TaskTapped { get; }
+        public ICommand UpdateIsExecutedCommand { get; }
+        public ICommand SelectSortMethodCommand { get; }
+        public ICommand SelectFiltersCommand { get; }
+        public ICommand TaskTapped { get; }
 
 
 
@@ -99,7 +100,7 @@ namespace ToDoList.ViewModels.Task
 
 
 
-        private async System.Threading.Tasks.Task OnDeleteTaskCommand(ReadTaskWrapper taskWrapper)
+        private async System.Threading.Tasks.Task OnDeleteTask(ReadTaskWrapper taskWrapper)
         {
 
 
@@ -117,7 +118,7 @@ namespace ToDoList.ViewModels.Task
 
 
         }
-        private async System.Threading.Tasks.Task OnUpdateIsExecutedCommand(ReadTaskWrapper taskWrapper)
+        private async System.Threading.Tasks.Task OnUpdateIsExecuted(ReadTaskWrapper taskWrapper)
         {
 
             if (taskWrapper == null || IsBusy)
@@ -148,7 +149,7 @@ namespace ToDoList.ViewModels.Task
 
         }
 
-        private async System.Threading.Tasks.Task OnLoadTasksCommand()
+        private async System.Threading.Tasks.Task OnLoadTasks()
         {
             IsBusy = true;
 
@@ -165,7 +166,7 @@ namespace ToDoList.ViewModels.Task
                 IsBusy = false;
             }
         }
-        private async System.Threading.Tasks.Task OnLoadMoreTasksCommand()
+        private async System.Threading.Tasks.Task OnLoadMoreTasks()
         {
 
             try
@@ -178,14 +179,14 @@ namespace ToDoList.ViewModels.Task
             }
 
         }
-        private async System.Threading.Tasks.Task OnSelectSortMethodCommand(GetTasksParamsWrapper param)
+        private async System.Threading.Tasks.Task OnSelectSortMethod(GetTasksParamsWrapper param)
         {
 #pragma warning disable CS8620 
             var result = await App.Current.MainPage.ShowPopupAsync(new SortTaskPopup());
 #pragma warning restore CS8620 
         }
 
-        private async System.Threading.Tasks.Task OnSelectFiltersCommand(GetTasksParamsWrapper param)
+        private async System.Threading.Tasks.Task OnSelectFilters(GetTasksParamsWrapper param)
         {
 #pragma warning disable CS8620 
             var result = await App.Current.MainPage.ShowPopupAsync(new FilterTaskPopup());
@@ -282,12 +283,12 @@ namespace ToDoList.ViewModels.Task
         }
 
 
-        private async void OnAddTaskCommand(object obj)
+        private async System.Threading.Tasks.Task OnAddTask()
         {
             await _navigationService.GoToPageRelative(nameof(AddTaskPage));
         }
 
-        private async void OnEditTaskCommand(ReadTaskWrapper taskWrapper)
+        private async System.Threading.Tasks.Task OnEditTask(ReadTaskWrapper taskWrapper)
         {
             await _navigationService.GoToPageRelative(nameof(EditTaskPage), taskWrapper.Id.ToString());
         }

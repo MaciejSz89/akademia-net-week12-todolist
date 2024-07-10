@@ -26,16 +26,16 @@ namespace ToDoList.ViewModels.Category
         {
             Title = "Kategorie";
             Categories = new ObservableRangeCollection<ReadCategoryWrapper>();
-            LoadCategoriesCommand = new AsyncCommand(() => ExecuteLoadCategoriesCommand());
+            LoadCategoriesCommand = new AsyncCommand(ExecuteLoadCategories);
             _getCategoriesParamsWrapper = new GetCategoriesParamsWrapper();
 
             CategoryTapped = new MvvmHelpers.Commands.Command<ReadCategoryWrapper>(OnCategorySelected);
 
-            AddCategoryCommand = new Command(ExecuteAddCategoryCommand);
-            EditCategoryCommand = new MvvmHelpers.Commands.Command<ReadCategoryWrapper>(async (x) => await ExecuteEditCategoryCommand(x));
-            DeleteCategoryCommand = new MvvmHelpers.Commands.Command<ReadCategoryWrapper>(async (x) => await ExecuteDeleteCategoryCommand(x));
-            PreviousPageCommand = new Command(async (x) => await ExecutePreviousPageCommand(), ValidatePreviousPage);
-            NextPageCommand = new Command(async (x) => await ExecuteNextPageCommand(), ValidateNextPage);
+            AddCategoryCommand = new AsyncCommand(OnAddCategory);
+            EditCategoryCommand = new AsyncCommand<ReadCategoryWrapper>(OnEditCategory);
+            DeleteCategoryCommand = new AsyncCommand<ReadCategoryWrapper>(OnDeleteCategory);
+            PreviousPageCommand = new AsyncCommand(OnPreviousPage, ValidatePreviousPage);
+            NextPageCommand = new AsyncCommand(OnNextPage, ValidateNextPage);
             _categoryService = categoryService;
         }
 
@@ -88,20 +88,20 @@ namespace ToDoList.ViewModels.Category
             return CurrentPage != 1;
         }
 
-        private async System.Threading.Tasks.Task ExecuteNextPageCommand()
+        private async System.Threading.Tasks.Task OnNextPage()
         {
             IsBusy = true;
             CurrentPage += 1;
-            await ExecuteLoadCategoriesCommand();
+            await ExecuteLoadCategories();
         }
 
-        private async System.Threading.Tasks.Task ExecutePreviousPageCommand()
+        private async System.Threading.Tasks.Task OnPreviousPage()
         {
             IsBusy = true;
             CurrentPage -= 1;
-            await ExecuteLoadCategoriesCommand();
+            await ExecuteLoadCategories();
         }
-        private async System.Threading.Tasks.Task ExecuteEditCategoryCommand(ReadCategoryWrapper categoryWrapper)
+        private async System.Threading.Tasks.Task OnEditCategory(ReadCategoryWrapper categoryWrapper)
         {
             if (categoryWrapper == null)
                 return;
@@ -109,7 +109,7 @@ namespace ToDoList.ViewModels.Category
             var route = $"/{nameof(EditCategoryPage)}?{nameof(ReadCategoryWrapper.Id)}={categoryWrapper.Id}";
             await Shell.Current.GoToAsync(route);
         }
-        private async System.Threading.Tasks.Task ExecuteDeleteCategoryCommand(ReadCategoryWrapper categoryWrapper)
+        private async System.Threading.Tasks.Task OnDeleteCategory(ReadCategoryWrapper categoryWrapper)
         {
             IsBusy = true;
             if (categoryWrapper == null)
@@ -128,7 +128,7 @@ namespace ToDoList.ViewModels.Category
 
         }
 
-        private async System.Threading.Tasks.Task ExecuteLoadCategoriesCommand()
+        private async System.Threading.Tasks.Task ExecuteLoadCategories()
         {
             IsBusy = true;
 
@@ -178,7 +178,7 @@ namespace ToDoList.ViewModels.Category
             }
         }
 
-        private async void ExecuteAddCategoryCommand(object obj)
+        private async System.Threading.Tasks.Task OnAddCategory()
         {
             await Shell.Current.GoToAsync($"{nameof(AddCategoryPage)}");
         }

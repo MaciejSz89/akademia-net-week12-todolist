@@ -1,23 +1,23 @@
 ﻿using MvvmHelpers;
-using MvvmHelpers.Commands;
+using System.Windows.Input;
 using ToDoList.Models.Wrappers.Task;
 
 namespace ToDoList.ViewModels.Task
 {
     public interface ITasksViewModel : IViewModel
     {
-        Command AddTaskCommand { get; }
-        Command DeleteTaskCommand { get; }
         GetTasksParamsWrapper GetTasksParamsWrapper { get; set; }
-        Command EditTaskCommand { get; }
-        Command LoadTasksCommand { get; }
-        Command LoadMoreTasksCommand { get; }
+        ICommand AddTaskCommand { get; }
+        ICommand DeleteTaskCommand { get; }
+        ICommand EditTaskCommand { get; }
+        ICommand LoadTasksCommand { get; }
+        ICommand LoadMoreTasksCommand { get; }
         ReadTaskWrapper? SelectedTask { get; set; }
         ObservableRangeCollection<ReadTaskWrapper> Tasks { get; }
-        Command<ReadTaskWrapper> TaskTapped { get; }
-        Command UpdateIsExecutedCommand { get; }
-        Command SelectSortMethodCommand { get; }
-        Command SelectFiltersCommand { get; }        
+        ICommand TaskTapped { get; }
+        ICommand UpdateIsExecutedCommand { get; }
+        ICommand SelectSortMethodCommand { get; }
+        ICommand SelectFiltersCommand { get; }        
         void OnAppearing();
     }
 }

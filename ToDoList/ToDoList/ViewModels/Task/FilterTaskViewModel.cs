@@ -36,28 +36,50 @@ namespace ToDoList.ViewModels.Task
             _categoryService = categoryService;
             Categories = new ObservableRangeCollection<ReadCategoryWrapper?>();
             IsExecutedFilters = new ObservableRangeCollection<KeyValuePair<string, bool?>>();
-            LoadFiltersCommand = new Command(async () => await OnLoadFiltersCommand());
+            LoadFiltersCommand = new AsyncCommand(OnLoadFilters);
+            ClearFiltersCommand = new Command(OnClearFilters);
             IsBusy = true;
-            Xamarin.Forms.Device.BeginInvokeOnMainThread(async () => await OnLoadFiltersCommand());
+            Xamarin.Forms.Device.BeginInvokeOnMainThread(async () => await OnLoadFilters());
             PropertyChanged += OnPropertyChanged;
 
         }
 
-        private async System.Threading.Tasks.Task OnLoadFiltersCommand()
+        private async System.Threading.Tasks.Task OnLoadFilters()
         {
 
             try
             {
-                IsExecutedFilters.AddRange(new List<KeyValuePair<string, bool?>>{
+                GetIsExecutedFilter();
+                await GetCategoriesAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        private void GetIsExecutedFilter()
+        {
+            IsExecutedFilters.AddRange(new List<KeyValuePair<string, bool?>>{
                         new KeyValuePair<string, bool?>("---Brak---", null),
                         new KeyValuePair<string, bool?>("Tylko nieukończone", false),
                         new KeyValuePair<string, bool?>("Tylko ukończone", true)
                     });
 
-                SelectedIsExecutedFilter = IsExecutedFilters.FirstOrDefault(x => x.Value == _tasksViewModel.GetTasksParamsWrapper.IsExecuted);
-                _selectedIsExecutedFilterInitialized = true;
-                OnPropertyChanged(nameof(SelectedIsExecutedFilter));
-                await GetCategoriesAsync();
+            SelectedIsExecutedFilter = IsExecutedFilters.FirstOrDefault(x => x.Value == _tasksViewModel.GetTasksParamsWrapper.IsExecuted);
+            _selectedIsExecutedFilterInitialized = true;
+            OnPropertyChanged(nameof(SelectedIsExecutedFilter));
+        }
+
+        private void OnClearFilters()
+        {
+
+            try
+            {
+                GetTasksParamsWrapper.Title = "";
+                SelectedIsExecutedFilter = IsExecutedFilters.FirstOrDefault(x => x.Value == null);
+                SelectedCategoryFilter = null;
+                _tasksViewModel.IsBusy = true;
             }
             catch (Exception ex)
             {
@@ -104,7 +126,8 @@ namespace ToDoList.ViewModels.Task
             }
         }
 
-        public Command LoadFiltersCommand { get; }
+        public ICommand LoadFiltersCommand { get; }
+        public ICommand ClearFiltersCommand { get; }
 
         public ObservableRangeCollection<KeyValuePair<string, bool?>> IsExecutedFilters { get; }
 

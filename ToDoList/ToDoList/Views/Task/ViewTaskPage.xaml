@@ -31,6 +31,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -76,6 +77,10 @@
                Grid.Column="1"
                Text="{Binding Task.Description}" 
                LineBreakMode="WordWrap"/>
+        <Button Grid.Row="4"
+                Grid.ColumnSpan="3"
+                Text="Edytuj" 
+                Command="{Binding EditCommand}"/>
 
 
     </Grid>

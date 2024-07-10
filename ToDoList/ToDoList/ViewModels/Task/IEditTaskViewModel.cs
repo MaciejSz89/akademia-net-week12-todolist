@@ -1,13 +1,17 @@
-﻿using ToDoList.Models.Wrappers.Task;
-using Xamarin.Forms;
+﻿using MvvmHelpers;
+using System.Windows.Input;
+using ToDoList.Models.Wrappers.Category;
+using ToDoList.Models.Wrappers.Task;
 
 namespace ToDoList.ViewModels.Task
 {
     public interface IEditTaskViewModel : IViewModel
     {
-        Command CancelCommand { get; }
         int Id { get; set; }
-        Command SaveCommand { get; }
+        ICommand SaveCommand { get; }
+        ICommand CancelCommand { get; }
         UpdateTaskWrapper Task { get; set; }
+        ReadCategoryWrapper SelectedCategory { get; set; }
+        ObservableRangeCollection<ReadCategoryWrapper> Categories { get; }
     }
 }

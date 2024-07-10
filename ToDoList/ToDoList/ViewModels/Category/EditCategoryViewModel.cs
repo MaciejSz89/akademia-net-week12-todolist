@@ -17,13 +17,13 @@ namespace ToDoList.ViewModels.Category
         private readonly ICategoryService _categoryService;
 
         public EditCategoryViewModel(ICategoryService categoryService)
-        {         
+        {
             SaveCommand = new AsyncCommand(OnSave, ValidateSave);
             CancelCommand = new Command(OnCancel);
             PropertyChanged +=
                 (_, __) => (SaveCommand as AsyncCommand)?.RaiseCanExecuteChanged();
             _categoryService = categoryService;
-       
+
         }
 
         private bool ValidateSave(object obj)
@@ -47,11 +47,11 @@ namespace ToDoList.ViewModels.Category
             set
             {
                 SetProperty(ref _id, value);
-                LoadTask(value);
+                System.Threading.Tasks.Task.Run(() => LoadCategory(value));
             }
         }
 
-        private async void LoadTask(int id)
+        private async System.Threading.Tasks.Task LoadCategory(int id)
         {
             Category = (await _categoryService.GetCategoryAsync(id))?.ToWriteWrapper()!;
         }

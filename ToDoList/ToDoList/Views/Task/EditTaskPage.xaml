@@ -8,22 +8,37 @@
              ios:Page.UseSafeArea="true">
     <ContentPage.Content>
         <StackLayout Spacing="3" Padding="15">
-            <Label Text="Tytuł" FontSize="Medium" />
-            <Entry Text="{Binding Task.Title, Mode=TwoWay}" FontSize="Medium" />
-            <Label Text="Opis" FontSize="Medium" />
-            <Label Text="Termin" FontSize="Medium" />
-            <DatePicker Format="dd-MM-yyyy" Date="{Binding Task.Term, Mode=TwoWay}" FontSize="Medium" Margin="0" />
-            <Editor Text="{Binding Task.Description, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
-            <Label Text="Kategoria" FontSize="Medium" />
-            <Picker Title="-- wybierz kategorię --"
+            <Label Text="Tytuł" 
+                   FontSize="Medium" />
+            <Entry Text="{Binding Task.Title, Mode=TwoWay}" 
+                   FontSize="Medium" />
+            <Label Text="Termin" 
+                   FontSize="Medium" />
+            <DatePicker Format="dd-MM-yyyy" 
+                        Date="{Binding Task.Term, Mode=TwoWay}" 
+                        FontSize="Medium" 
+                        Margin="0" />
+            <Label Text="Opis" 
+                   FontSize="Medium" />
+            <Editor Text="{Binding Task.Description, Mode=TwoWay}" 
+                    AutoSize="TextChanges" 
+                    FontSize="Medium" 
+                    Margin="0" />
+            <Label Text="Kategoria" 
+                   FontSize="Medium" />
+            <Picker Title="{Binding SelectedCategory.Name}"
                     ItemsSource="{Binding Categories}"
                     ItemDisplayBinding="{Binding Name}"
                     SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
                     FontSize="Medium" 
-                    Margin="0" />
+                    Margin="0" ></Picker>
             <StackLayout Orientation="Horizontal">
-                <Button Text="Anuluj" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"></Button>
-                <Button Text="Zapisz" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
+                <Button Text="Anuluj" 
+                        Command="{Binding CancelCommand}" 
+                        HorizontalOptions="FillAndExpand"/>
+                <Button Text="Zapisz" 
+                        Command="{Binding SaveCommand}" 
+                        HorizontalOptions="FillAndExpand"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
