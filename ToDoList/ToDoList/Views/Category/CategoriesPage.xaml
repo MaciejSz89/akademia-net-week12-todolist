@@ -13,6 +13,12 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding SelectSortMethodCommand}" >
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="fontello"
+               Glyph="{StaticResource font-awesome-sort}"/>
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
         <ToolbarItem Command="{Binding AddCategoryCommand}" >
             <ToolbarItem.IconImageSource>
                 <FontImageSource FontFamily="fontello"
@@ -31,7 +37,9 @@
                  IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
         <CollectionView x:Name="CategoriesListView"
                 ItemsSource="{Binding Categories}"
-                SelectionMode="None">
+                SelectionMode="None"
+                RemainingItemsThreshold="1"
+                RemainingItemsThresholdReachedCommand="{Binding LoadMoreCategoriesCommand}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>

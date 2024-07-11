@@ -8,9 +8,9 @@ namespace ToDoList.ViewModels.Task
     {
         GetTasksParamsWrapper GetTasksParamsWrapper { get; set; }
         ICommand AddTaskCommand { get; }
+        ICommand LoadTasksCommand { get; }
         ICommand DeleteTaskCommand { get; }
         ICommand EditTaskCommand { get; }
-        ICommand LoadTasksCommand { get; }
         ICommand LoadMoreTasksCommand { get; }
         ReadTaskWrapper? SelectedTask { get; set; }
         ObservableRangeCollection<ReadTaskWrapper> Tasks { get; }

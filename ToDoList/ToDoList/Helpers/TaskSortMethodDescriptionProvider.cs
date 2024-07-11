@@ -23,7 +23,7 @@ namespace ToDoList.Helpers
         public string GetDescription(TaskSortMethod? taskSortMethod)
         {
             if (taskSortMethod == null)
-                return "===Brak===";
+                return "---Brak---";
 
             return _descriptions.TryGetValue(taskSortMethod, out var description) ? description : taskSortMethod.ToString();
         }

@@ -42,7 +42,7 @@ namespace ToDoList.ViewModels.Task
             LoadTasksCommand = new AsyncCommand(OnLoadTasks);
             LoadMoreTasksCommand = new AsyncCommand(OnLoadMoreTasks);
 
-            _getTasksParamsWrapper = new GetTasksParamsWrapper();
+            _getTasksParamsWrapper = new GetTasksParamsWrapper(taskSortMethodDescriptionProvider);
 
             TaskTapped = new Command<ReadTaskWrapper>(OnTaskSelected);
 
@@ -96,13 +96,16 @@ namespace ToDoList.ViewModels.Task
             }
         }
 
-
-
-
-
+        private async System.Threading.Tasks.Task OnAddTask()
+        {
+            await _navigationService.GoToPageRelative(nameof(AddTaskPage));
+        }
+        private async System.Threading.Tasks.Task OnEditTask(ReadTaskWrapper taskWrapper)
+        {
+            await _navigationService.GoToPageRelative(nameof(EditTaskPage), taskWrapper.Id.ToString());
+        }
         private async System.Threading.Tasks.Task OnDeleteTask(ReadTaskWrapper taskWrapper)
         {
-
 
             if (taskWrapper == null)
                 return;
@@ -115,9 +118,8 @@ namespace ToDoList.ViewModels.Task
             if (await _taskService.DeleteTaskAsync(taskWrapper.Id))
                 Tasks.Remove(taskWrapper);
 
-
-
         }
+
         private async System.Threading.Tasks.Task OnUpdateIsExecuted(ReadTaskWrapper taskWrapper)
         {
 
@@ -283,15 +285,7 @@ namespace ToDoList.ViewModels.Task
         }
 
 
-        private async System.Threading.Tasks.Task OnAddTask()
-        {
-            await _navigationService.GoToPageRelative(nameof(AddTaskPage));
-        }
 
-        private async System.Threading.Tasks.Task OnEditTask(ReadTaskWrapper taskWrapper)
-        {
-            await _navigationService.GoToPageRelative(nameof(EditTaskPage), taskWrapper.Id.ToString());
-        }
         async void OnTaskSelected(ReadTaskWrapper? task)
         {
             if (task == null)

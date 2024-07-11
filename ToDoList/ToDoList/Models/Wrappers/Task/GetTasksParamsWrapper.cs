@@ -10,12 +10,11 @@ namespace ToDoList.Models.Wrappers.Task
         private int? _categoryId;
         private string _title = null!;
         private int _pageNumber = 1;
-        private int _pageSize = 4;
+        private int _pageSize = 12;
         private string _sortMethod;
 
-        public GetTasksParamsWrapper()
+        public GetTasksParamsWrapper(IEnumDescriptionProvider<TaskSortMethod> taskSortMethodDescriptionProvider)
         {
-            var taskSortMethodDescriptionProvider = new TaskSortMethodDescriptionProvider();
             _sortMethod = taskSortMethodDescriptionProvider.GetDescription(TaskSortMethod.ByTitleAscending);
         }
 

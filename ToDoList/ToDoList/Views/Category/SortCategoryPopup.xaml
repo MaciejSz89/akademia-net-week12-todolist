@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xct:Popup xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
+             x:Class="ToDoList.Views.Category.SortCategoryPopup"
+           Size="340,120">
+    <StackLayout Orientation="Vertical">
+        <Label Text="Sortuj:"
+               TextColor="Black"
+               FontSize="Medium"/>
+        <Picker x:Name="picker"
+                Title="---Wybierz---"
+                ItemsSource="{Binding CategorySortMethods}"
+                SelectedItem="{Binding GetCategoriesParamsWrapper.SortMethod}"/>
+    </StackLayout>
+</xct:Popup>

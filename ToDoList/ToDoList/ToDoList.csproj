@@ -57,6 +57,9 @@
     <Compile Update="Views\Category\CategoriesPage.xaml.cs">
       <DependentUpon>CategoriesPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Category\SortCategoryPopup.xaml.cs">
+      <DependentUpon>SortCategoryPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Category\ViewCategoryPage.xaml.cs">
       <DependentUpon>ViewCategoryPage.xaml</DependentUpon>
     </Compile>
