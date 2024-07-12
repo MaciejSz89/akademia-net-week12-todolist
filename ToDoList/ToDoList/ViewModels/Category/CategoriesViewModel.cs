@@ -27,7 +27,7 @@ namespace ToDoList.ViewModels.Category
         private int _currentPage = 0;
         private int _currentPageSize = 0;
         private GetCategoriesParamsWrapper _getCategoriesParamsWrapper;
-        private int _pageSize = 12;
+        private int _pageSize = 14;
         private readonly ICategoryService _categoryService;
         private IEnumDescriptionProvider<CategorySortMethod> _categorySortMethodDescriptionProvider;
 
@@ -101,7 +101,7 @@ namespace ToDoList.ViewModels.Category
             if (categoryWrapper == null)
                 return;
 
-            var dialog = await Shell.Current.DisplayAlert("Usuwanie!", $"Czy na pewno chcesz usunąć kategorię: {categoryWrapper.Id}", "Tak", "Nie");
+            var dialog = await Shell.Current.DisplayAlert("Usuwanie!", $"Czy na pewno chcesz usunąć kategorię: {categoryWrapper.Name}?", "Tak", "Nie");
 
             if (!dialog)
                 return;

@@ -6,10 +6,28 @@
              Title="{Binding Title}">
     <ContentPage.Resources>
         <converters:BoolToStringConverter x:Key="BoolConverter"/>
+        <Style TargetType="Label">
+            <Setter Property="TextColor"
+                        Value="{StaticResource Primary}"/>
+            <Setter Property="VerticalTextAlignment"
+                        Value="Center"/>
+        </Style>
     </ContentPage.Resources>
-    <StackLayout Spacing="20" Padding="15">
-        <Label Text="Nazwa:" FontSize="Medium" />
-        <Label Text="{Binding Category.Name}" FontSize="Small"/>
-        <Button Text="Edytuj" Command="{Binding EditCommand}"/>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding EditCommand}" >
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="fontello"
+                     Glyph="{StaticResource font-awesome-pencil}"/>
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+    <StackLayout Orientation="Horizontal"
+                 Spacing="20" 
+                 Padding="15"
+                 VerticalOptions="Start">
+        <Label Style="{DynamicResource CustomListItemIconStyle}"
+               Text="{StaticResource font-awesome-tag}"/>
+        <Label Style="{DynamicResource CustomListItemTextStyle}"
+               Text="{Binding Category.Name}"/>
     </StackLayout>
 </ContentPage>

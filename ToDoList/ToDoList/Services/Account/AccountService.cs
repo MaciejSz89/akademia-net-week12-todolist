@@ -25,6 +25,9 @@ namespace ToDoList.Services.Account
                 if(!(response.StatusCode == HttpStatusCode.OK))
                     return false;
 
+                await Xamarin.Essentials.SecureStorage.SetAsync("Email", dto.Email);
+                await Xamarin.Essentials.SecureStorage.SetAsync("Password", dto.Password);
+
                 var accessToken = await response.Content.ReadAsStringAsync();
 
                 await Xamarin.Essentials.SecureStorage.SetAsync("AccessToken", accessToken);

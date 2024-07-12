@@ -75,7 +75,7 @@ namespace ToDoList
 
             services.AddScoped<ILoginViewModel, LoginViewModel>()
                     .AddScoped<IRegisterViewModel, RegisterViewModel>()
-                    .AddScoped<IAddTaskViewModel, AddTaskViewModel>()
+                    .AddTransient<IAddTaskViewModel, AddTaskViewModel>()
                     .AddScoped<IEditTaskViewModel, EditTaskViewModel>()
                     .AddTransient<ISortTaskViewModel, SortTaskViewModel>()
                     .AddTransient<IFilterTaskViewModel, FilterTaskViewModel>()
@@ -83,7 +83,7 @@ namespace ToDoList
                     .AddScoped<IEnumDescriptionProvider<CategorySortMethod>, CategorySortMethodDescriptionProvider>()
                     .AddScoped<ITasksViewModel, TasksViewModel>()
                     .AddScoped<IViewTaskViewModel, ViewTaskViewModel>()
-                    .AddScoped<IAddCategoryViewModel, AddCategoryViewModel>()
+                    .AddTransient<IAddCategoryViewModel, AddCategoryViewModel>()
                     .AddScoped<IEditCategoryViewModel, EditCategoryViewModel>()
                     .AddTransient<ISortCategoryViewModel, SortCategoryViewModel>()
                     .AddScoped<ICategoriesViewModel, CategoriesViewModel>()

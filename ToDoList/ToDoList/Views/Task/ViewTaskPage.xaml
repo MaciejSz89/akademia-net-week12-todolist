@@ -25,6 +25,14 @@
             
         </ResourceDictionary>
     </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding EditCommand}" >
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="fontello"
+                     Glyph="{StaticResource font-awesome-pencil}"/>
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
     <Grid Padding="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -77,10 +85,7 @@
                Grid.Column="1"
                Text="{Binding Task.Description}" 
                LineBreakMode="WordWrap"/>
-        <Button Grid.Row="4"
-                Grid.ColumnSpan="3"
-                Text="Edytuj" 
-                Command="{Binding EditCommand}"/>
+
 
 
     </Grid>
